@@ -50,6 +50,9 @@ export class AccountService {
     )
   }
 
+  isLoggedIn() : boolean{
+    return this.loggedIn;
+  }
 
 
   private handleError<T> (operation = 'operation', result?: T) {
