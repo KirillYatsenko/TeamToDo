@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { RegistrationService } from '../../shared/services/registration.service';
-import {UserRegistration} from '../../shared/models/UserRegistration';
-import { HttpErrorResponse } from '../../../../node_modules/@angular/common/http';
+import { AccountService } from '../../shared/services/account.service';
+import {UserRegistration} from '../../shared/models/userregistration';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class RegistrationFormComponent implements OnInit {
   isRequesting: boolean;
   submitted: boolean = false;
 
-  constructor(private registrationService : RegistrationService, private router : Router) { }
+  constructor(private registrationService : AccountService, private router : Router) { }
 
   user: UserRegistration = {username: "", password: "", email: ""};
 
@@ -39,11 +39,14 @@ export class RegistrationFormComponent implements OnInit {
             .subscribe(
               result  => {
                 if(result){
-                  this.router.navigate(['/login'],{queryParams: {brandNew: true,email:this.user.password}});                         
-              }},
+                  this.router.navigate(['/login'],{queryParams: {brandNew: true,email:this.user.email}});                         
+              }
+            },
               errors => {
                 let errorResponse = errors as HttpErrorResponse;
-                this.errors = errorResponse.error.description;
+                let jsonError = JSON.parse(errorResponse.error);
+                let errorToString= String(jsonError.description);
+                this.errors = errorToString;
               })
       }      
     }

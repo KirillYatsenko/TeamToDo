@@ -29,14 +29,14 @@ namespace TeamToDo.Controllers.api
       configuration = _configuration;
     }
 
-    public async Task<IActionResult> Login([FromBody]LoginViewModel loginViewModel)
+    public async Task<ActionResult> Login([FromBody]LoginViewModel loginViewModel)
     {
       if (await IsValidLoginData(loginViewModel))
       {
         return Ok(new { token = GenerateToken(loginViewModel.Email) });
       }
 
-      return BadRequest();
+      return BadRequest("Invalid username or password");
     }
 
 
@@ -57,12 +57,6 @@ namespace TeamToDo.Controllers.api
       {
         return BadRequest(result.Errors.ToList()[0]);
       }
-    }
-
-    [HttpGet]
-    public async Task<string> RegistrationGet()
-    {
-      return "OK";
     }
 
     private async Task<bool> IsValidLoginData([FromBody]LoginViewModel loginData)

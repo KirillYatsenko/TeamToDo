@@ -9,18 +9,20 @@ import {map, catchError} from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class RegistrationService {
+export class AccountService {
 
   constructor(private http: HttpClient, private configService : ConfigService) {
     this.baseUri = configService.getApiURI();
+    this.loggedIn = !!localStorage.getItem('auth_token');
    }
 
+  private loggedIn: boolean = false;
   private registrationUri = "/account/registration";
+  private loginUri = "/account/login";
   private baseUri;
 
   register(email: string, username:string, password: string) : Observable<any> {
     let body = JSON.stringify({username,password,email});
-    
     let url = this.baseUri + this.registrationUri;
 
     return this.http.post(url,body,
@@ -29,6 +31,23 @@ export class RegistrationService {
         headers:new HttpHeaders({ 'Content-Type': 'application/json' })
       }
     );
+  }
+
+  login(email:string, password: string) : Observable<any>{
+    let body = JSON.stringify({email,password});
+    let url = this.baseUri + this.loginUri;
+
+    return this.http.post(url,body,
+     {
+      responseType:"text",
+      headers:new HttpHeaders({ 'Content-Type': 'application/json' })
+    }).pipe(
+      map(result => {
+        let token = JSON.parse(result).token;
+        localStorage.setItem('auth_token',token);
+        return true;
+      })
+    )
   }
 
 
