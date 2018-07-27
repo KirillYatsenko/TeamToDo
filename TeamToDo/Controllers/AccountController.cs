@@ -36,7 +36,7 @@ namespace TeamToDo.Controllers.api
         return Ok(new { token = GenerateToken(loginViewModel.Email) });
       }
 
-      return BadRequest("Invalid username of password");
+      return BadRequest("Invalid email or password");
     }
 
 
