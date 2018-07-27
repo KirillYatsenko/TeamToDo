@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,8 +9,8 @@ namespace TeamToDo.Models.Repositories
     {
         IQueryable<T> All { get; }
 
-        void Add(T entity);
-        void Delete(T entity);
-        Task<T> Get(int id);
+        Task<bool> AddAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
+        Task<T> GetAsync(int id);
     }
 }

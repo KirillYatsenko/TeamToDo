@@ -1,0 +1,21 @@
+<div class="container">
+
+  <div>
+    <label>Title:
+      <input #title />
+    </label>
+    <button (click)="addList(title.value); title.value=''">
+      Add new todolist
+    </button>
+  </div>
+
+  <div *ngIf="TodoLists.length">
+    <ul class="todos">
+      <li *ngFor="let todolist of TodoLists">
+        <span>{{todolist.title}}</span>
+      </li>
+    </ul>
+  </div>
+
+</div>
+

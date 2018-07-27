@@ -1,12 +1,21 @@
 <div class="container">
   <h1>Registration</h1>
   <form  #registrationForm = "ngForm" (ngSubmit)="registerUser()">
+
     <div class="form-group">
       <label for="username">username</label>
       <input type="text" class="form-control" id="username"
        required
       [(ngModel)]="user.username"
-      name="username">
+      name="username"
+      #username="ngModel">
+    </div>
+
+    <div *ngIf="username.invalid && (username.dirty || username.touched)"
+      class="alert alert-danger">
+      <div *ngIf="username.errors.required">
+        Username is required.
+      </div>
     </div>
 
     <div class="form-group">
@@ -14,21 +23,44 @@
       <input type="text" class="form-control" id="email" 
       required
       [(ngModel)]="user.email"
-      name="email">
+      name="email"
+      #email="ngModel"
+      ngModel email>
     </div>
+
+    <div *ngIf="email.invalid && (email.dirty || email.touched)"
+    class="alert alert-danger">
+      <div *ngIf="email.errors.required">
+        Email is required.
+      </div>
+      <div *ngIf="email.errors.email">
+          Not correct email format
+      </div>
+  </div>
 
     <div class="form-group">
       <label for="username">password</label>
       <input type="password" class="form-control" id="password"
-       required
+       required minlength="6"
        [(ngModel)]="user.password"
-       name="password">
+       name="password"
+       #password="ngModel">
+    </div>
+
+    <div *ngIf="password.invalid && (password.dirty || password.touched)"
+      class="alert alert-danger">
+      <div *ngIf="password.errors.required">
+        Password is required.
+      </div>
+      <div *ngIf="password.errors.minlength">
+        Password must be at least 6 characters long.
+      </div>
     </div>
    
-    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="submit" class="btn btn-success" [disabled]="!registrationForm.valid">Submit</button>
 
-    <div *ngIf="errors" class="alert alert-danger" role="alert">
-      <strong>Oops!</strong> {{errors}}
+    <div *ngIf="errors" class="alert alert-danger">
+     {{errors}}
     </div>      
 
   </form>

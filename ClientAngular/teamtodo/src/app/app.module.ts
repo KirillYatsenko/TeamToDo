@@ -8,13 +8,15 @@ import { AppRoutingModule } from './app-routing.module';
 import {RegistrationFormComponent} from './account/registration-form/registration-form.component';
 import { LoginFormComponent } from './account/login-form/login-form.component';
 import { TodoComponent } from './todo/todo/todo.component';
+import { TodolistComponent } from './todo/todolist/todolist.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegistrationFormComponent,
     LoginFormComponent,
-    TodoComponent
+    TodoComponent,
+    TodolistComponent
   ],
   imports: [
     BrowserModule,

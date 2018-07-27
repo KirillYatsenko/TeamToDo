@@ -4,10 +4,12 @@ import {RegistrationFormComponent} from './account/registration-form/registratio
 import { LoginFormComponent } from './account/login-form/login-form.component';
 import { TodoComponent } from './todo/todo/todo.component';
 import {AuthGuard} from './shared/guards/AuthGuard';
+import { TodolistComponent } from './todo/todolist/todolist.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/registration', pathMatch: 'full' },
-  {path: 'todo', component: TodoComponent,canActivate: [AuthGuard] },
+  { path: 'todolists', component: TodolistComponent, canActivate: [AuthGuard]},
+  { path: 'todo', component: TodoComponent,canActivate: [AuthGuard] },
   { path: 'registration', component: RegistrationFormComponent },
   { path: 'login', component: LoginFormComponent},
 ];

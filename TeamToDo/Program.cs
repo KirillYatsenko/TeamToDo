@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,23 +10,28 @@ using Microsoft.Extensions.Logging;
 
 namespace TeamTodo
 {
-    public class Program
+  public class Program
+  {
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+      var host = new WebHostBuilder()
+       .UseKestrel()
+       .UseContentRoot(Directory.GetCurrentDirectory())
+       .UseIISIntegration()
+       .UseStartup<Startup>()
+        .ConfigureAppConfiguration((hostingContext, confing) =>
         {
-            var host = new WebHostBuilder()
-             .UseKestrel()
-             .UseContentRoot(Directory.GetCurrentDirectory())
-             .UseIISIntegration()
-             .UseStartup<Startup>()
-              .ConfigureAppConfiguration((hostingContext, confing) =>
-              {
-                  confing.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-              })
-             .UseUrls("http://localhost:5000/")
-             .Build();
+          confing.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        })
+       .UseUrls("http://localhost:5000/")
+       .Build();
 
-            host.Run();
-        }
+      host.Run();
     }
+
+    public static IWebHost BuildWebHost(string[] args) =>
+          WebHost.CreateDefaultBuilder(args)
+              .UseStartup<Startup>()
+              .Build();
+  }
 }

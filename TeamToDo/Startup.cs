@@ -15,9 +15,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TeamTodo.Infrastructure.Services;
+using TeamTodo.Models.Repositories.Interfaces;
+using TeamTodo.Models.Repositories.Solid;
 using TeamTodo.Models.User;
 using TeamToDo.Models;
 using TeamToDo.Models.Contexts;
@@ -40,6 +44,9 @@ namespace TeamTodo
     {
       services.AddCors();
 
+      services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddTransient<AccountManager>();
+
       services.AddDbContext<TeamTodoContext>(
         options => options.UseSqlServer(
                Configuration["Data:TeamTodo:ConnectionString"]
@@ -47,6 +54,7 @@ namespace TeamTodo
 
       services.AddIdentity<TeamTodoUser, IdentityRole>(options =>
       {
+        options.User.RequireUniqueEmail = true;
         options.Password.RequiredLength = 6;
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
@@ -75,9 +83,9 @@ namespace TeamTodo
               };
       });
 
-      services.AddTransient<IIssueRepository, IssueRepository>();
-      services.AddMvc();
+      setRepositoriesTransient(services);
 
+      services.AddMvc();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +100,13 @@ namespace TeamTodo
       app.UseDefaultFiles();
       app.UseStaticFiles();
       app.UseMvc();
+    }
+
+    private void setRepositoriesTransient(IServiceCollection services)
+    {
+      services.AddTransient<ITodoRepository, TodoRepository>();
+      services.AddTransient<ITodoListRepository, TodoListRepository>();
+      services.AddTransient<IUserTodoListRepository, UserTodoListRepository>();
     }
   }
 }

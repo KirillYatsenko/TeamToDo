@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamToDo.Models.Contexts;
 
 namespace TeamTodo.Migrations
 {
     [DbContext(typeof(TeamTodoContext))]
-    partial class TeamTodoContextModelSnapshot : ModelSnapshot
+    [Migration("20180726074954_changeTableNames")]
+    partial class changeTableNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,19 +131,6 @@ namespace TeamTodo.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListUser", b =>
-                {
-                    b.Property<int>("TodoListId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("TodoListId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TodoListUser");
-                });
-
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
                 {
                     b.Property<int>("Id")
@@ -219,6 +208,8 @@ namespace TeamTodo.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<int?>("TodoListId");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -233,6 +224,8 @@ namespace TeamTodo.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("TodoListId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -282,19 +275,6 @@ namespace TeamTodo.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListUser", b =>
-                {
-                    b.HasOne("TeamToDo.Models.TodoList", "TodoList")
-                        .WithMany("Members")
-                        .HasForeignKey("TodoListId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "User")
-                        .WithMany("TodoLists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
                 {
                     b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Creator")
@@ -311,6 +291,13 @@ namespace TeamTodo.Migrations
                     b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Admin")
                         .WithMany()
                         .HasForeignKey("AdminId");
+                });
+
+            modelBuilder.Entity("TeamTodo.Models.User.TeamTodoUser", b =>
+                {
+                    b.HasOne("TeamToDo.Models.TodoList")
+                        .WithMany("Members")
+                        .HasForeignKey("TodoListId");
                 });
 #pragma warning restore 612, 618
         }

@@ -43,10 +43,8 @@ export class RegistrationFormComponent implements OnInit {
               }
             },
               errors => {
-                let errorResponse = errors as HttpErrorResponse;
-                let jsonError = JSON.parse(errorResponse.error);
-                let errorToString= String(jsonError.description);
-                this.errors = errorToString;
+                let errorDescription = errors["error"];
+                this.errors = errorDescription;
               })
       }      
     }

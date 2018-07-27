@@ -1,3 +1,14 @@
-<p>
-  todo works!
-</p>
+<div class="container">
+  <h2>My todos</h2>
+
+  <div *ngIf="Todos.length">
+    <ul class="todos">
+      <li *ngFor="let todo of Todos">
+        <span>todo.text</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+

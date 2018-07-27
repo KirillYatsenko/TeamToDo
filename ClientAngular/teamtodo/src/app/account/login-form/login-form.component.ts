@@ -39,13 +39,12 @@ export class LoginFormComponent implements OnInit {
       .subscribe(result=>
       {
         if(result){
-            this.router.navigate(['/todo'])
+            this.router.navigate(['/todolists'])
         } 
       },
     
       errors => {
-               let errorResponse = errors["error"];
-                this.errors = errorResponse;
+                this.errors = errors["error"];
                 this.brandNew = false;
     })
   }

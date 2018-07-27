@@ -36,7 +36,7 @@ namespace TeamToDo.Controllers.api
         return Ok(new { token = GenerateToken(loginViewModel.Email) });
       }
 
-      return BadRequest("Invalid username or password");
+      return BadRequest("Invalid username of password");
     }
 
 
@@ -55,7 +55,7 @@ namespace TeamToDo.Controllers.api
       }
       else
       {
-        return BadRequest(result.Errors.ToList()[0]);
+        return BadRequest(result.Errors.ToList()[0].Description);
       }
     }
 
@@ -81,8 +81,8 @@ namespace TeamToDo.Controllers.api
     {
       var claims = new[]
       {
-              new Claim(ClaimTypes.Name, email)
-            };
+              new Claim(ClaimTypes.Email, email)
+      };
 
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecurityKey"]));
       var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

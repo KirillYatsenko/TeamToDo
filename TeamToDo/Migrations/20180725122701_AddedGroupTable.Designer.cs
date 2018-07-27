@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamToDo.Models.Contexts;
 
 namespace TeamTodo.Migrations
 {
     [DbContext(typeof(TeamTodoContext))]
-    partial class TeamTodoContextModelSnapshot : ModelSnapshot
+    [Migration("20180725122701_AddedGroupTable")]
+    partial class AddedGroupTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,22 +131,26 @@ namespace TeamTodo.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListUser", b =>
+            modelBuilder.Entity("TeamToDo.Models.Group", b =>
                 {
-                    b.Property<int>("TodoListId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("AdminId");
 
-                    b.HasKey("TodoListId", "UserId");
+                    b.Property<DateTime>("Crated");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("Id");
 
-                    b.ToTable("TodoListUser");
+                    b.HasIndex("AdminId");
+
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -154,36 +160,17 @@ namespace TeamTodo.Migrations
 
                     b.Property<string>("CreatorId");
 
+                    b.Property<int?>("GroupId");
+
                     b.Property<string>("Text");
 
-                    b.Property<int?>("TodoListId");
-
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("CreatorId");
 
-                    b.HasIndex("TodoListId");
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Todos");
-                });
-
-            modelBuilder.Entity("TeamToDo.Models.TodoList", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdminId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
-
-                    b.ToTable("TodoLists");
                 });
 
             modelBuilder.Entity("TeamTodo.Models.User.TeamTodoUser", b =>
@@ -200,6 +187,8 @@ namespace TeamTodo.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<int?>("GroupId");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -225,6 +214,8 @@ namespace TeamTodo.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -282,17 +273,11 @@ namespace TeamTodo.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListUser", b =>
+            modelBuilder.Entity("TeamToDo.Models.Group", b =>
                 {
-                    b.HasOne("TeamToDo.Models.TodoList", "TodoList")
-                        .WithMany("Members")
-                        .HasForeignKey("TodoListId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "User")
-                        .WithMany("TodoLists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
                 });
 
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
@@ -301,16 +286,16 @@ namespace TeamTodo.Migrations
                         .WithMany()
                         .HasForeignKey("CreatorId");
 
-                    b.HasOne("TeamToDo.Models.TodoList", "TodoList")
+                    b.HasOne("TeamToDo.Models.Group")
                         .WithMany("Todos")
-                        .HasForeignKey("TodoListId");
+                        .HasForeignKey("GroupId");
                 });
 
-            modelBuilder.Entity("TeamToDo.Models.TodoList", b =>
+            modelBuilder.Entity("TeamTodo.Models.User.TeamTodoUser", b =>
                 {
-                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Admin")
-                        .WithMany()
-                        .HasForeignKey("AdminId");
+                    b.HasOne("TeamToDo.Models.Group")
+                        .WithMany("Members")
+                        .HasForeignKey("GroupId");
                 });
 #pragma warning restore 612, 618
         }
