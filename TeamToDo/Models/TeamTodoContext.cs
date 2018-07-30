@@ -32,6 +32,19 @@ namespace TeamToDo.Models.Contexts
         .HasOne(u => u.User)
         .WithMany(u => u.TodoLists)
         .HasForeignKey(u => u.UserId);
+
+      modelBuilder.Entity<TodoListAdmin>()
+       .HasKey(x => new { x.TodoListId, x.AdminId });
+
+      modelBuilder.Entity<TodoListAdmin>()
+      .HasOne(t => t.TodoList)
+      .WithMany(t => t.Admins)
+      .HasForeignKey(t => t.TodoListId);
+
+      modelBuilder.Entity<TodoListAdmin>()
+        .HasOne(u => u.Admin)
+        .WithMany(u => u.TodoListsAdmin)
+        .HasForeignKey(u => u.AdminId);
     }
 
     public DbSet<Todo> Todos { get; set; }

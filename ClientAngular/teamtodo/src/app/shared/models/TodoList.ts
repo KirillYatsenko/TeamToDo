@@ -5,7 +5,7 @@ export class TodoList{
       id : string = "";
       title: string = "";
       created: string = "";
-      admin: TodoUser = new TodoUser();
+      admin: TodoUser[] = [];
       todos: Todo[] = [];
       members: TodoUser[] = [];
 }

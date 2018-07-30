@@ -13,8 +13,10 @@ namespace TeamToDo.Models
     public string Title { get; set; }
     public DateTime Created { get; set; }
 
+    public TeamTodoUser Creator { get; set; }
+
     public ICollection<Todo> Todos { get; set; } = new List<Todo>();
     public ICollection<TodoListUser> Members { get; } = new List<TodoListUser>();
-    public TeamTodoUser Admin { get; set; }
+    public ICollection<TodoListAdmin> Admins { get; } = new List<TodoListAdmin>();
   }
 }

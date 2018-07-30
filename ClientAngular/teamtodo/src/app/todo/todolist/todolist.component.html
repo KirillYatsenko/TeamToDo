@@ -1,21 +1,45 @@
 <div class="container">
 
-  <div>
-    <label>Title:
-      <input #title />
-    </label>
-    <button (click)="addList(title.value); title.value=''">
-      Add new todolist
-    </button>
-  </div>
+  <div class="row">
+    <div class="col-md-2">
 
-  <div *ngIf="TodoLists.length">
-    <ul class="todos">
-      <li *ngFor="let todolist of TodoLists">
-        <span>{{todolist.title}}</span>
-      </li>
-    </ul>
+    </div>
+    <div class="col-md-8">
+      <div class="form-group">
+          <label>Title:
+            <input class="form-control" #title />
+          </label>
+          <button class="btn btn-primary" (click)="addList(title.value); title.value=''">
+            Add new todolist
+          </button> 
+        </div>
+      
+      
+        <div *ngIf="TodoLists.length">
+          <div class="lists" *ngFor="let todolist of TodoLists">
+              <div class="card">
+                  <h5 class="card-header">
+                     <span class="list-title" 
+                     data-toggle="modal" data-target="#modal-details" (click)="selectList(todolist.id)"> {{todolist.title}} </span>
+                  </h5>
+                  <div class="card-body">
+                      <div>
+                        Members: 
+                        <div class="Members" *ngFor="let member of todolist?.members">
+                          {{member.userName}}
+                        </div>
+                      </div>
+                  </div>
+                  <button class="btn btn-danger" (click)="deleteListRequest(todolist.id)"
+                  data-toggle="modal" data-target="#confirmationDialog">Delete</button>
+                </div>
+          </div>
+        </div>
   </div>
+  </div>
+  
 
 </div>
+<app-details-list-modal [todoList]="selectedList" [invited]="invited" [listComponent]="this"></app-details-list-modal>
+<app-delete-list-modal [todoList]="todoListDeleteRequest" [deleteComponent]="this"></app-delete-list-modal>
 

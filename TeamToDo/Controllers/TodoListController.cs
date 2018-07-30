@@ -24,15 +24,18 @@ namespace TeamTodo.Controllers
   {
     private ITodoListRepository todoListRepository;
     private IUserTodoListRepository userTodoListRepository;
+    private IAdminTodoListRepository adminTodoListRepository;
 
     private AccountManager accountManager;
 
     public TodoListController(ITodoListRepository _todoListRepository,
       IUserTodoListRepository _userTodoListRepository,
+      IAdminTodoListRepository _adminTodoListRepository,
       AccountManager _accountManager)
     {
       todoListRepository = _todoListRepository;
       userTodoListRepository = _userTodoListRepository;
+      adminTodoListRepository = _adminTodoListRepository;
       accountManager = _accountManager;
     }
 
@@ -41,17 +44,48 @@ namespace TeamTodo.Controllers
     {
       var user = await accountManager.GetUser();
 
-      var todoLists = todoListRepository.All;
+      var todoLists = todoListRepository.All.ToList();
       var userTodoLists = todoLists.Where(x => x.Members.Select(u => u.User)
         .Any(z => z.Id == user.Id)).ToList();
 
       var result = new List<TodoListViewModel>();
       foreach (var item in userTodoLists)
       {
-        result.Add((TodoListViewModel)item);
+        var viewModel = (TodoListViewModel)item;
+        viewModel.Creator = item.Creator.Id == user.Id;
+        result.Add(viewModel);
       }
 
       return result;
+    }
+
+    [HttpGet("{id}")]
+    public async Task<TodoListViewModel> Get(int id)
+    {
+      var todoList = await todoListRepository.GetAsync(id);
+
+      if(todoList!=null)
+      {
+        return (TodoListViewModel)todoList;
+      }
+
+      return null;
+    }
+
+    [HttpPost("acceptinvitation")]
+    public async Task<ActionResult> AcceptInvitation([FromBody]string id)
+    {
+      var todoList = await todoListRepository.GetAsync(int.Parse(id));
+      var user = await accountManager.GetUser();
+
+      if (todoList != null)
+      {
+        if (await userTodoListRepository.AddAsync(new TodoListUser() { TodoList = todoList, User = user })){
+          return new OkObjectResult("User accepted invitation");
+        }
+      }
+
+      return BadRequest();
     }
 
     [HttpPost]
@@ -63,11 +97,13 @@ namespace TeamTodo.Controllers
 
         var todo = new TodoList();
         todo.Title = title;
-        todo.Admin = user;
         todo.Created = DateTime.Now;
+        todo.Creator = user;
 
         if (await todoListRepository.AddAsync(todo)
-          && await userTodoListRepository.AddAsync(new TodoListUser() { User = user, TodoList = todo }))
+          && await userTodoListRepository.AddAsync(new TodoListUser() { User = user, TodoList = todo })
+          && await adminTodoListRepository.AddAsync(new TodoListAdmin() { Admin = user, TodoList = todo})
+         )
         {
           return new OkObjectResult("Todolist added");
         }
@@ -76,6 +112,24 @@ namespace TeamTodo.Controllers
 
       return BadRequest();
     }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+      var user = await accountManager.GetUser();
+
+      var todoList = await todoListRepository.GetAsync(id);
+      if(todoList != null
+        && todoList.Creator.Id == user.Id
+        && await todoListRepository.DeleteAsync(todoList)
+        )
+      {
+        return new OkObjectResult("Todolist deleted");
+      }
+
+      return BadRequest();
+    }
+
 
   }
 }

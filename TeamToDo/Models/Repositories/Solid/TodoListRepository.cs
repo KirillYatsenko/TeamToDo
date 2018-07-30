@@ -25,7 +25,9 @@ namespace TeamTodo.Models.Repositories.Solid
       {
         return db.TodoLists
             .Include(x => x.Members)
-            .ThenInclude(x => x.User);
+            .ThenInclude(x => x.User)
+            .Include(x => x.Admins)
+            .ThenInclude(x => x.Admin);
       }
 
     }
@@ -58,7 +60,7 @@ namespace TeamTodo.Models.Repositories.Solid
 
     public async Task<TodoList> GetAsync(int id)
     {
-      return await db.TodoLists.FindAsync(id);
+      return await All.FirstAsync(x => x.Id == id);
     }
   }
 }

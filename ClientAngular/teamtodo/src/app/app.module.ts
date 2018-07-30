@@ -9,6 +9,8 @@ import {RegistrationFormComponent} from './account/registration-form/registratio
 import { LoginFormComponent } from './account/login-form/login-form.component';
 import { TodoComponent } from './todo/todo/todo.component';
 import { TodolistComponent } from './todo/todolist/todolist.component';
+import { DeleteListModalComponent } from './todo/todolist/delete-list-modal/delete-list-modal.component';
+import { DetailsListModalComponent } from './todo/todolist/details-list-modal/details-list-modal.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { TodolistComponent } from './todo/todolist/todolist.component';
     RegistrationFormComponent,
     LoginFormComponent,
     TodoComponent,
-    TodolistComponent
+    TodolistComponent,
+    DeleteListModalComponent,
+    DetailsListModalComponent
   ],
   imports: [
     BrowserModule,
