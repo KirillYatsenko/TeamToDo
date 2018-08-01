@@ -11,6 +11,7 @@ import { TodoComponent } from './todo/todo/todo.component';
 import { TodolistComponent } from './todo/todolist/todolist.component';
 import { DeleteListModalComponent } from './todo/todolist/delete-list-modal/delete-list-modal.component';
 import { DetailsListModalComponent } from './todo/todolist/details-list-modal/details-list-modal.component';
+import { InvitationComponent } from './todo/todolist/invitation/invitation.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DetailsListModalComponent } from './todo/todolist/details-list-modal/de
     TodoComponent,
     TodolistComponent,
     DeleteListModalComponent,
-    DetailsListModalComponent
+    DetailsListModalComponent,
+    InvitationComponent
   ],
   imports: [
     BrowserModule,

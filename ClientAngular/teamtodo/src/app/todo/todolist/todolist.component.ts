@@ -3,6 +3,8 @@ import { TodolistService } from '../../shared/services/todolist.service';
 import { TodoList } from '../../shared/models/TodoList';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AccountService } from '../../shared/services/account.service';
+import { TodoUser } from '../../shared/models/TodoUser';
 declare var $: any;
 
 
@@ -20,32 +22,49 @@ export class TodolistComponent implements OnInit {
   errors: string;
 
   open: string;
-  invited: boolean;
 
-  constructor( private todolistService: TodolistService,  private activatedRoute: ActivatedRoute){}
+  currentUser: TodoUser;
+
+  constructor( private todolistService: TodolistService,  
+    private activatedRoute: ActivatedRoute,
+    private accountService: AccountService){}
 
   ngOnInit() {
-
-    this.loadLists();
-    this.this = this;
 
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (param: any)=>{
           this.open = param['open'];
-          this.invited = param['invited'];
       }
     );
 
-    if(this.open){
-      this.selectList(this.open);
-      $("#modal-details").modal("show");
-    }
+    this.loadLists();
+    this.this = this;
+
+    this.loadCurrentUser();
+  }
+
+  loadCurrentUser(){
+    this.accountService.getCurrentUser()
+      .subscribe(
+        result=>{
+          this.currentUser = result;
+        },
+        errors =>{
+          this.errors = errors;
+        }
+      )
   }
 
   loadLists(){
     this.todolistService.getLists()
     .subscribe(result=>{
       this.TodoLists = result;
+
+      if(this.open){
+        this.selectList(this.open);
+        $("#modal-details").modal("show");
+      }
+
     },
     errors=>{
       this.errors = errors;
@@ -66,22 +85,11 @@ export class TodolistComponent implements OnInit {
   selectedList: TodoList = new TodoList();
 
   selectList(id: string){
-    if(this.invited){
-      this.todolistService.getList(id)
-        .subscribe(
-          result=>{
-            this.this.selectedList = result;
-          },
-          errors => {
-            this.errors = errors;
-          }
-        )
-    }else{
       this.selectedList = this.TodoLists.find(x=>x.id ==id);
-    }
   }
 
   todoListDeleteRequest: TodoList = new TodoList();
+  erros: string;
 
   deleteListRequest(id: string){
     this.todoListDeleteRequest = this.TodoLists.find(x=>x.id == id);
@@ -103,20 +111,5 @@ export class TodolistComponent implements OnInit {
       this.TodoLists.splice(index,1);
   }
 
-  acceptInvitation(id: string){
-    this.todolistService.acceptInvitation(id)
-      .subscribe(
-        result=>{
-          if(result){
-            this.invited = false;
-            //Accepted
-          }
-        }
-      )
-  }
-
-  openDetailsModal(id: string){
-
-  }
 
 }

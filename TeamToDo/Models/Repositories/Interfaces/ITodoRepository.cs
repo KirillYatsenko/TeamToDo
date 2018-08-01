@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TeamToDo.Models.Repositories
 {
-    public interface ITodoRepository : IRepository<Todo>
+    public interface ITodoRepository : IRepository<Todo,int>
     {
     }
 }

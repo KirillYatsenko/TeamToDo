@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import {UserRegistration} from '../models/userregistration';
 import {ConfigService} from './config.service';
 import {map, catchError} from 'rxjs/operators';
+import { TodoUser } from '../models/TodoUser';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,8 @@ export class AccountService {
 
   constructor(private http: HttpClient, private configService : ConfigService) {
     this.baseUri = configService.getApiURI();
-    this.loggedIn = !!localStorage.getItem('auth_token');
    }
 
-  private loggedIn: boolean = false;
   private registrationUri = "/account/registration";
   private loginUri = "/account/login";
   private baseUri;
@@ -51,9 +50,20 @@ export class AccountService {
   }
 
   isLoggedIn() : boolean{
-    return this.loggedIn;
+    return !!localStorage.getItem('auth_token');
   }
 
+  getCurrentUser() :Observable<TodoUser>{
+    let url = this.baseUri + '/account/GetCurrentUser';
+    
+    return this.http.get<TodoUser>(url,{
+      headers:new HttpHeaders(
+       { 'Content-Type': 'application/json'
+        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+       }
+      )
+    });
+  }
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -69,5 +79,6 @@ export class AccountService {
     };
   }
 
-  ngOnit(){}
+  ngOnit(){
+  }
 }

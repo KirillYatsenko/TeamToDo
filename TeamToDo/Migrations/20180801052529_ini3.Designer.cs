@@ -10,8 +10,8 @@ using TeamToDo.Models.Contexts;
 namespace TeamTodo.Migrations
 {
     [DbContext(typeof(TeamTodoContext))]
-    [Migration("20180727151946_Admin")]
-    partial class Admin
+    [Migration("20180801052529_ini3")]
+    partial class ini3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,6 +155,26 @@ namespace TeamTodo.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TodoListUser");
+                });
+
+            modelBuilder.Entity("TeamTodo.Models.Invitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Expiration");
+
+                    b.Property<string>("InviterId");
+
+                    b.Property<int?>("TodoListId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InviterId");
+
+                    b.HasIndex("TodoListId");
+
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
@@ -321,6 +341,17 @@ namespace TeamTodo.Migrations
                         .WithMany("TodoLists")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TeamTodo.Models.Invitation", b =>
+                {
+                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Inviter")
+                        .WithMany()
+                        .HasForeignKey("InviterId");
+
+                    b.HasOne("TeamToDo.Models.TodoList", "TodoList")
+                        .WithMany("Invitations")
+                        .HasForeignKey("TodoListId");
                 });
 
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>

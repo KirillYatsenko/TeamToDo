@@ -7,7 +7,7 @@ using TeamToDo.Models.Repositories;
 
 namespace TeamTodo.Models.Repositories.Interfaces
 {
-    public interface IAdminTodoListRepository : IRepository<TodoListAdmin>
+    public interface IAdminTodoListRepository : IRepository<TodoListAdmin,int>
     {
     }
 }

@@ -32,35 +32,30 @@ namespace TeamTodo.Models.Repositories.Solid
 
     }
 
+    public async Task<TodoList> GetAsync(int id)
+    {
+      return await All.FirstAsync(x => x.Id == id);
+    }
+
+
     public async Task<bool> AddAsync(TodoList entity)
     {
       db.TodoLists.Add(entity);
-      int rowsChanged = await db.SaveChangesAsync();
-
-      if(rowsChanged > 0)
-      {
-        return true;
-      }
-
-      return false;
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
 
     public async Task<bool> DeleteAsync(TodoList entity)
     {
       db.TodoLists.Remove(entity);
-      int rowsChanged = await db.SaveChangesAsync();
-
-      if (rowsChanged > 0)
-      {
-        return true;
-      }
-
-      return false;
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
 
-    public async Task<TodoList> GetAsync(int id)
+    public async Task<bool> UpdateAsync(TodoList entity)
     {
-      return await All.FirstAsync(x => x.Id == id);
+      db.TodoLists.Update(entity);
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
+
+
   }
 }

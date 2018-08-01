@@ -5,11 +5,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using TeamTodo.Infrastructure.Services;
 using TeamTodo.Models.User;
 using TeamTodo.Models.ViewModels;
 
@@ -21,12 +23,25 @@ namespace TeamToDo.Controllers.api
     private UserManager<TeamTodoUser> userManager;
     private SignInManager<TeamTodoUser> signInManager;
     private IConfiguration configuration;
+    private AccountManager accountManager;
 
-    public AccountController(UserManager<TeamTodoUser> _userManager, SignInManager<TeamTodoUser> _signInManager, IConfiguration _configuration)
+    public AccountController(UserManager<TeamTodoUser> _userManager,
+      SignInManager<TeamTodoUser> _signInManager,
+      IConfiguration _configuration,
+      AccountManager _accountManager)
     {
       userManager = _userManager;
       signInManager = _signInManager;
       configuration = _configuration;
+      accountManager = _accountManager;
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<TodoUserViewModel> GetCurrentUser()
+    {
+      var user = await accountManager.GetUser();
+      return (TodoUserViewModel)user;
     }
 
     public async Task<ActionResult> Login([FromBody]LoginViewModel loginViewModel)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeamTodo.Models.Repositories;
 using TeamToDo.Models.Contexts;
 
 namespace TeamToDo.Models.Repositories.Solid
@@ -26,33 +27,24 @@ namespace TeamToDo.Models.Repositories.Solid
     public async Task<bool> AddAsync(Todo entity)
     {
       db.Todos.Add(entity);
-      int rowsChanged = await db.SaveChangesAsync();
-
-      if (rowsChanged > 0)
-      {
-        return true;
-      }
-
-      return false;
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
 
     public async Task<bool> DeleteAsync(Todo entity)
     {
       db.Todos.Remove(entity);
-      int rowsChanged = await db.SaveChangesAsync();
-
-      if (rowsChanged > 0)
-      {
-        return true;
-      }
-
-      return false;
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
 
     public async Task<Todo> GetAsync(int id)
     {
       var issue = await db.Todos.FindAsync(id);
       return issue;
+    }
+
+    public Task<bool> UpdateAsync(Todo entity)
+    {
+      throw new NotImplementedException();
     }
   }
 }

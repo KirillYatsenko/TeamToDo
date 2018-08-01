@@ -76,20 +76,20 @@ export class TodolistService {
     )
   }
 
-  acceptInvitation(id: string) : Observable<boolean>{
-    let url = this.baseUri+'/todolist/acceptinvitation';
-    return this.http.post(url,`${id}`,  {
-      responseType:"text",
+  leaveGroup(id: string): Observable<boolean>{
+    let url = this.baseUri + `/todolist/leavegroup/${id}`;
+    
+    return this.http.delete<boolean>(url,
+      {
       headers:new HttpHeaders(
        { 'Content-Type': 'application/json'
         , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
        }
       )
-    }).pipe(
-      map(result=>{
-        return true;
-      })
-    )
+    });
   }
+
+
+
 
 }

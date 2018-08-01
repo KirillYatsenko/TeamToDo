@@ -72,21 +72,7 @@ namespace TeamTodo.Controllers
       return null;
     }
 
-    [HttpPost("acceptinvitation")]
-    public async Task<ActionResult> AcceptInvitation([FromBody]string id)
-    {
-      var todoList = await todoListRepository.GetAsync(int.Parse(id));
-      var user = await accountManager.GetUser();
-
-      if (todoList != null)
-      {
-        if (await userTodoListRepository.AddAsync(new TodoListUser() { TodoList = todoList, User = user })){
-          return new OkObjectResult("User accepted invitation");
-        }
-      }
-
-      return BadRequest();
-    }
+  
 
     [HttpPost]
     public async Task<ActionResult> Add([FromBody]string title)

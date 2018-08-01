@@ -22,14 +22,7 @@ namespace TeamTodo.Models.Repositories.Solid
     public async Task<bool> AddAsync(TodoListUser entity)
     {
       db.Add(entity);
-      int result = await db.SaveChangesAsync();
-
-      if(result > 0)
-      {
-        return true;
-      }
-
-      return false;
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
 
     public Task<bool> DeleteAsync(TodoListUser entity)
@@ -38,6 +31,11 @@ namespace TeamTodo.Models.Repositories.Solid
     }
 
     public Task<TodoListUser> GetAsync(int id)
+    {
+      throw new NotImplementedException();
+    }
+
+    public Task<bool> UpdateAsync(TodoListUser entity)
     {
       throw new NotImplementedException();
     }

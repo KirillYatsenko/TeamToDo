@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeamTodo.Models;
 using TeamTodo.Models.HelperTables;
 using TeamTodo.Models.User;
 using TeamToDo.Models;
@@ -49,5 +50,6 @@ namespace TeamToDo.Models.Contexts
 
     public DbSet<Todo> Todos { get; set; }
     public DbSet<TodoList> TodoLists { get; set; }
+    public DbSet<Invitation> Invitations { get; set; }
   }
 }

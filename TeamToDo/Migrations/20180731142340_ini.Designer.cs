@@ -10,8 +10,8 @@ using TeamToDo.Models.Contexts;
 namespace TeamTodo.Migrations
 {
     [DbContext(typeof(TeamTodoContext))]
-    [Migration("20180727065816_UserListManyToMany2")]
-    partial class UserListManyToMany2
+    [Migration("20180731142340_ini")]
+    partial class ini
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -131,6 +131,19 @@ namespace TeamTodo.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListAdmin", b =>
+                {
+                    b.Property<int>("TodoListId");
+
+                    b.Property<string>("AdminId");
+
+                    b.HasKey("TodoListId", "AdminId");
+
+                    b.HasIndex("AdminId");
+
+                    b.ToTable("TodoListAdmin");
+                });
+
             modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListUser", b =>
                 {
                     b.Property<int>("TodoListId");
@@ -142,6 +155,26 @@ namespace TeamTodo.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TodoListUser");
+                });
+
+            modelBuilder.Entity("TeamTodo.Models.Invitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Expiration");
+
+                    b.Property<string>("InviterId");
+
+                    b.Property<int?>("TodoListId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InviterId");
+
+                    b.HasIndex("TodoListId");
+
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
@@ -175,15 +208,15 @@ namespace TeamTodo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdminId");
-
                     b.Property<DateTime>("Created");
+
+                    b.Property<string>("CreatorId");
 
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("TodoLists");
                 });
@@ -284,6 +317,19 @@ namespace TeamTodo.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListAdmin", b =>
+                {
+                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Admin")
+                        .WithMany("TodoListsAdmin")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TeamToDo.Models.TodoList", "TodoList")
+                        .WithMany("Admins")
+                        .HasForeignKey("TodoListId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("TeamTodo.Models.HelperTables.TodoListUser", b =>
                 {
                     b.HasOne("TeamToDo.Models.TodoList", "TodoList")
@@ -295,6 +341,17 @@ namespace TeamTodo.Migrations
                         .WithMany("TodoLists")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TeamTodo.Models.Invitation", b =>
+                {
+                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Inviter")
+                        .WithMany()
+                        .HasForeignKey("InviterId");
+
+                    b.HasOne("TeamToDo.Models.TodoList", "TodoList")
+                        .WithMany()
+                        .HasForeignKey("TodoListId");
                 });
 
             modelBuilder.Entity("TeamToDo.Models.Todo", b =>
@@ -310,9 +367,9 @@ namespace TeamTodo.Migrations
 
             modelBuilder.Entity("TeamToDo.Models.TodoList", b =>
                 {
-                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Admin")
+                    b.HasOne("TeamTodo.Models.User.TeamTodoUser", "Creator")
                         .WithMany()
-                        .HasForeignKey("AdminId");
+                        .HasForeignKey("CreatorId");
                 });
 #pragma warning restore 612, 618
         }

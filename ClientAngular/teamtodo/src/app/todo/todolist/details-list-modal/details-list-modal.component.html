@@ -4,17 +4,14 @@
           <div class="modal-content">
               <div class="modal-header">
       
-                 <div *ngIf="invited">
-                   You was invited to this group
-                   <button class="btn btn-primary" (click)="listComponent?.acceptInvitation(todoList.id)">Accept</button>
-                 </div>   
-      
                   <h5 class="modal-title" id="exampleModalLabel"> {{todoList?.title}}</h5>
                       Members: 
                       <div class="Members" *ngFor="let member of todoList?.members">
                         {{member?.userName}}
                       </div>
-                      <button (click)="addMember(todoList.id)">Invite</button>
+                        <button class="btn btn-primary"(click)="addMember(todoList.id)">Invite</button>
+                        <button class="btn btn-danger" (click)="leaveGroup(todoList.id)">leave group</button>
+                        <button class="btn btn-default">edit group</button>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -26,3 +23,17 @@
         </div>
       </div>
 
+          <div class="modal fade" id="modal-invitation-link" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                        <h3>Send this link to a friend</h3>
+                  </div>
+                  <div class="modal-body">
+                      {{invitationLink}}
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+      

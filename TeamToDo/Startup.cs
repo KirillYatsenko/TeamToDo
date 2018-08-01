@@ -108,6 +108,7 @@ namespace TeamTodo
       services.AddTransient<ITodoListRepository, TodoListRepository>();
       services.AddTransient<IUserTodoListRepository, UserTodoListRepository>();
       services.AddTransient<IAdminTodoListRepository, AdminTodoListRepository>();
+      services.AddTransient<IInvitationRepository, InvitationRepository>();
     }
   }
 }

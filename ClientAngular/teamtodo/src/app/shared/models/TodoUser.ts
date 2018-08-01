@@ -1,5 +1,5 @@
 export class TodoUser{
     id: string;
-    username: string;
+    userName: string;
     email: string;
 }
