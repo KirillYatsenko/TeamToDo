@@ -20,6 +20,9 @@ export class TodolistComponent implements OnInit {
   TodoLists: TodoList[] = [];
   this: TodolistComponent;
   errors: string;
+  membersFetched: boolean = false;
+  importantSelected: boolean = false;
+  selectedMember: TodoUser;
 
   open: string;
 
@@ -86,6 +89,13 @@ export class TodolistComponent implements OnInit {
 
   selectList(id: string){
       this.selectedList = this.TodoLists.find(x=>x.id ==id);
+      this.membersFetched = false;
+      this.importantSelected = false; 
+
+      this.selectedMember = new TodoUser();
+      this.selectedMember.userName = "Me";
+      this.selectedMember.id = this.currentUser.id;
+      $("#member-dropdown").html(this.selectedMember.userName);
   }
 
   todoListDeleteRequest: TodoList = new TodoList();
@@ -110,6 +120,5 @@ export class TodolistComponent implements OnInit {
       let index = this.TodoLists.findIndex(x=>x.id == id);
       this.TodoLists.splice(index,1);
   }
-
 
 }

@@ -8,7 +8,7 @@ import { TodolistComponent } from './todo/todolist/todolist.component';
 import { InvitationComponent } from './todo/todolist/invitation/invitation.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/registration', pathMatch: 'full' },
+  { path: '', redirectTo: '/todolists', pathMatch: 'full', canActivate: [AuthGuard] },
   { path: 'todolists', component: TodolistComponent, canActivate: [AuthGuard]},
   { path: 'todo', component: TodoComponent,canActivate: [AuthGuard] },
   { path: 'registration', component: RegistrationFormComponent },

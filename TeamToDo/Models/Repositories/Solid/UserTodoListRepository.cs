@@ -25,10 +25,12 @@ namespace TeamTodo.Models.Repositories.Solid
       return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
 
-    public Task<bool> DeleteAsync(TodoListUser entity)
+    public async Task<bool> DeleteAsync(TodoListUser entity)
     {
-      throw new NotImplementedException();
+      db.Remove(entity);
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
+
 
     public Task<TodoListUser> GetAsync(int id)
     {

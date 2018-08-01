@@ -79,14 +79,22 @@ export class TodolistService {
   leaveGroup(id: string): Observable<boolean>{
     let url = this.baseUri + `/todolist/leavegroup/${id}`;
     
-    return this.http.delete<boolean>(url,
+    return this.http.delete(url,
       {
+      responseType:"text",
       headers:new HttpHeaders(
        { 'Content-Type': 'application/json'
         , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
        }
       )
-    });
+    }).pipe(
+      map(x=>
+        {
+          return true;
+        }
+      )
+    )
+
   }
 
 

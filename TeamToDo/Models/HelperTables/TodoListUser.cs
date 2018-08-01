@@ -10,9 +10,9 @@ namespace TeamTodo.Models.HelperTables
   public class TodoListUser
   {
     public int TodoListId { get; set; }
-    public TodoList TodoList { get; set; }
+    public virtual TodoList TodoList { get; set; }
 
     public string UserId { get; set; }
-    public TeamTodoUser User { get; set; }
+    public virtual TeamTodoUser User { get; set; }
   }
 }

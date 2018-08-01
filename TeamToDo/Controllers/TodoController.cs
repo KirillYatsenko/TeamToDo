@@ -52,7 +52,7 @@ namespace TeamToDo.Controllers.Api
     {
       var todo = (Todo)todoViewModel;
       todo.Creator = await accountManager.GetUser();
-      todoRepository.AddAsync(todo);
+      await todoRepository.AddAsync(todo);
     }
 
   }

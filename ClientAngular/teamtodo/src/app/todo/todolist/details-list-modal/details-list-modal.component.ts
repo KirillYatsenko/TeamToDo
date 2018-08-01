@@ -46,14 +46,49 @@ export class DetailsListModalComponent implements OnInit {
       .subscribe(
         result=>{
           if(result){
-            
+           $("#modal-details").modal("hide");
+            this.listComponent.deleteFromModel(id);
           }
         }
       )
   }
 
+  members: TodoUser[] = [];
+
+  fetchMembers(){
+
+    if(this.listComponent.membersFetched){
+      return;
+    }
+
+    this.members = [];
+    this.currentUser.userName = "Me";
+
+    this.members.push(this.currentUser);
+
+    let currentUserIndex = this.todoList.members.findIndex(x=>x.id == this.currentUser.id);
+    let cloned = this.todoList.members.map(x => Object.assign({}, x));
+    delete cloned[currentUserIndex];
+
+    this.members = this.members.concat(cloned);
+
+    this.listComponent.membersFetched = true;
+  }
+
+  importantSelect(){
+    this.listComponent.importantSelected = ! this.listComponent.importantSelected;
+  }
+
+  memberSelected(member: TodoUser){
+    this.listComponent.selectedMember = member;
+    $("#member-dropdown").html(this.listComponent.selectedMember.userName);
+  }
+
+  selectAllMembers(){
+    $("#member-dropdown").html("All");
+  }
+
   ngOnInit() {
-   
   }
 
 }

@@ -14,11 +14,11 @@ namespace TeamToDo.Models
     public string Title { get; set; }
     public DateTime Created { get; set; }
 
-    public TeamTodoUser Creator { get; set; }
+    public virtual TeamTodoUser Creator { get; set; }
 
-    public ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
-    public ICollection<Todo> Todos { get; set; } = new List<Todo>();
-    public ICollection<TodoListUser> Members { get; } = new List<TodoListUser>();
-    public ICollection<TodoListAdmin> Admins { get; } = new List<TodoListAdmin>();
+    public virtual ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
+    public virtual ICollection<Todo> Todos { get; set; } = new List<Todo>();
+    public virtual ICollection<TodoListUser> Members { get; } = new List<TodoListUser>();
+    public virtual ICollection<TodoListAdmin> Admins { get; } = new List<TodoListAdmin>();
   }
 }

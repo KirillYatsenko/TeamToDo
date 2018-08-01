@@ -13,8 +13,8 @@ namespace TeamToDo.Models
     public DateTime Created { get; set; }
     public bool Completed { get; set; }
 
-    public TeamTodoUser Creator { get; set; }
-    public TodoList TodoList { get; set; }
+    public virtual TeamTodoUser Creator { get; set; }
+    public virtual TodoList TodoList { get; set; }
 
   }
 }

@@ -1,5 +1,7 @@
 <div class="container">
 
+    
+
 <h1>User: {{currentUser?.email}}</h1>
 
   <div class="row">
@@ -14,7 +16,7 @@
           <button class="btn btn-primary" (click)="addList(title.value); title.value=''">
             Add new todolist
           </button> 
-        </div>
+      </div>
       
       
         <div *ngIf="TodoLists.length">
@@ -41,7 +43,7 @@
   </div>
   
 
-</div>
+</div> 
 <app-details-list-modal [currentUser]="currentUser" [todoList]="selectedList" [listComponent]="this"></app-details-list-modal>
 <app-delete-list-modal [todoList]="todoListDeleteRequest" [deleteComponent]="this"></app-delete-list-modal>
 

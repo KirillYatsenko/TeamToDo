@@ -48,7 +48,7 @@ namespace TeamTodo
       services.AddTransient<AccountManager>();
 
       services.AddDbContext<TeamTodoContext>(
-        options => options.UseSqlServer(
+        options => options.UseLazyLoadingProxies().UseSqlServer(
                Configuration["Data:TeamTodo:ConnectionString"]
             ));
 

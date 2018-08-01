@@ -13,9 +13,9 @@ namespace TeamTodo.Models
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    public TodoList TodoList { get; set; }
+    public virtual TodoList TodoList { get; set; }
     public DateTime Expiration { get; set; }
 
-    public TeamTodoUser Inviter { get; set; }
+    public virtual TeamTodoUser Inviter { get; set; }
   }
 }

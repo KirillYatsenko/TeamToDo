@@ -64,7 +64,7 @@ namespace TeamTodo.Controllers
     {
       var todoList = await todoListRepository.GetAsync(id);
 
-      if(todoList!=null)
+      if (todoList != null)
       {
         return (TodoListViewModel)todoList;
       }
@@ -72,7 +72,7 @@ namespace TeamTodo.Controllers
       return null;
     }
 
-  
+
 
     [HttpPost]
     public async Task<ActionResult> Add([FromBody]string title)
@@ -88,12 +88,12 @@ namespace TeamTodo.Controllers
 
         if (await todoListRepository.AddAsync(todo)
           && await userTodoListRepository.AddAsync(new TodoListUser() { User = user, TodoList = todo })
-          && await adminTodoListRepository.AddAsync(new TodoListAdmin() { Admin = user, TodoList = todo})
+          && await adminTodoListRepository.AddAsync(new TodoListAdmin() { Admin = user, TodoList = todo })
          )
         {
           return new OkObjectResult("Todolist added");
         }
-       
+
       }
 
       return BadRequest();
@@ -105,12 +105,29 @@ namespace TeamTodo.Controllers
       var user = await accountManager.GetUser();
 
       var todoList = await todoListRepository.GetAsync(id);
-      if(todoList != null
+      if (todoList != null
         && todoList.Creator.Id == user.Id
         && await todoListRepository.DeleteAsync(todoList)
         )
       {
         return new OkObjectResult("Todolist deleted");
+      }
+
+      return BadRequest();
+    }
+
+    [HttpDelete("[action]/{id}")]
+    public async Task<ActionResult> LeaveGroup(int id)
+    {
+      var user = await accountManager.GetUser();
+      var userTodoList = user.TodoLists.FirstOrDefault(x => x.TodoListId == id);
+
+      if (userTodoList != null)
+      {
+        if (await userTodoListRepository.DeleteAsync(userTodoList))
+        {
+          return new OkObjectResult("User deleted");
+        }
       }
 
       return BadRequest();
