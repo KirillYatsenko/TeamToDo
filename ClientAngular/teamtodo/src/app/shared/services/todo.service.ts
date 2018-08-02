@@ -30,7 +30,25 @@ export class TodoService {
           , 'Authorization': `Bearer ${authToken}` }
         )
       }
-    );
+    )
+  }
+
+  addTodo(todo: Todo) : Observable<boolean>{
+    let url = this.baseUri+'/todo/AddTodo';
+    let authToken = localStorage.getItem('auth_token');
+
+    let body = JSON.stringify(todo);
+
+    return this.http.post(url,body,{
+      headers:new HttpHeaders(
+        { 'Content-Type': 'application/json'
+        , 'Authorization': `Bearer ${authToken}` }
+      )
+    }).pipe(
+      map(result=>{
+        return true;
+      })
+    )
   }
 
 }

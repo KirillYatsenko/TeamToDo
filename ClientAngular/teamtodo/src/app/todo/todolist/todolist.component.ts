@@ -18,15 +18,12 @@ export class TodolistComponent implements OnInit {
   private subscription: Subscription;
 
   TodoLists: TodoList[] = [];
-  this: TodolistComponent;
-  errors: string;
-  membersFetched: boolean = false;
-  importantSelected: boolean = false;
-  selectedMember: TodoUser;
-
-  open: string;
-
   currentUser: TodoUser;
+  selectedList: TodoList;
+
+  errors: string;
+  open: string;
+  todoListDeleteRequest: TodoList = new TodoList();
 
   constructor( private todolistService: TodolistService,  
     private activatedRoute: ActivatedRoute,
@@ -41,7 +38,6 @@ export class TodolistComponent implements OnInit {
     );
 
     this.loadLists();
-    this.this = this;
 
     this.loadCurrentUser();
   }
@@ -85,21 +81,10 @@ export class TodolistComponent implements OnInit {
       });
   }
 
-  selectedList: TodoList = new TodoList();
 
   selectList(id: string){
       this.selectedList = this.TodoLists.find(x=>x.id ==id);
-      this.membersFetched = false;
-      this.importantSelected = false; 
-
-      this.selectedMember = new TodoUser();
-      this.selectedMember.userName = "Me";
-      this.selectedMember.id = this.currentUser.id;
-      $("#member-dropdown").html(this.selectedMember.userName);
   }
-
-  todoListDeleteRequest: TodoList = new TodoList();
-  erros: string;
 
   deleteListRequest(id: string){
     this.todoListDeleteRequest = this.TodoLists.find(x=>x.id == id);

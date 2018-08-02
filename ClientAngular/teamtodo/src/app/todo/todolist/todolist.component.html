@@ -24,7 +24,7 @@
               <div class="card">
                   <h5 class="card-header">
                      <span class="list-title" 
-                     data-toggle="modal" data-target="#modal-details" (click)="selectList(todolist.id)"> {{todolist.title}} </span>
+                     data-toggle="modal" data-target="#modal-details" (click)="selectList(todolist.id); details.setData();"> {{todolist.title}} </span>
                   </h5>
                   <div class="card-body">
                       <div>
@@ -44,6 +44,6 @@
   
 
 </div> 
-<app-details-list-modal [currentUser]="currentUser" [todoList]="selectedList" [listComponent]="this"></app-details-list-modal>
+<app-details-list-modal #details [todoList]="selectedList" [currentUser]="currentUser" [listComponent]="this"></app-details-list-modal>
 <app-delete-list-modal [todoList]="todoListDeleteRequest" [deleteComponent]="this"></app-delete-list-modal>
 

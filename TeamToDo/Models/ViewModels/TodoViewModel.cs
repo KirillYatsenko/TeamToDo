@@ -12,6 +12,9 @@ namespace TeamTodo.Models.ViewModels
     public TodoUserViewModel User { get; set; }
     public bool Completed { get; set; }
     public string Text { get; set; }
+    public int ListId { get; set; }
+    public string Created { get; set; }
+    public bool Important { get; set; }
 
     public static explicit operator TodoViewModel(Todo todo)
     {
@@ -20,7 +23,9 @@ namespace TeamTodo.Models.ViewModels
         Id = todo.Id.ToString(),
         User = (TodoUserViewModel)todo.Creator,
         Completed = todo.Completed,
-        Text = todo.Text
+        Text = todo.Text,
+        ListId = todo.TodoList.Id,
+        Created = todo.Created.ToString()
       };
     }
 
@@ -30,7 +35,7 @@ namespace TeamTodo.Models.ViewModels
       {
         Created = DateTime.Now,
         Completed = todoViewModel.Completed,
-        Text = todoViewModel.Text
+        Text = todoViewModel.Text,
       };
     }
 

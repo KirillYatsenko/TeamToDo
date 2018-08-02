@@ -20,27 +20,27 @@
 
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary" type="button">Add</button>
+                        <button (click)="addTodo()" class="btn btn-outline-secondary" type="button">Add</button>
                       </div>
                       <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
                       <div class="input-group-append">
-                            <button (click)="importantSelect()" [ngClass]="{'selected-important':this.listComponent.importantSelected}" class="btn btn-outline-secondary" type="button">
+                            <button (click)="importantChecked=!importantChecked;" [ngClass]="{'selected-important':this.importantChecked}" class="btn btn-outline-secondary" type="button">
                                <i class="far fa-star"></i>
                              </button>
-                          <button id="member-dropdown" (click)="fetchMembers()" class="btn btn-default btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <button id="member-dropdown" class="btn btn-default btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           </button>
                           <div class="dropdown-menu">
+                              <span class="dropdown-item" (click)="selectCurrentUser()" >Me</span>
                               <span class="dropdown-item" (click)="selectAllMembers()" >All</span>
-                            <div *ngIf="listComponent.membersFetched">
                               <div role="separator" class="dropdown-divider"></div>
-                              <div *ngFor="let member of members">
-                                  <span class="dropdown-item" (click)="memberSelected(member)" >{{member.userName}}</span>
-                              </div>
-                            </div>
+                              <span *ngFor="let member of dropdownMembers" class="dropdown-item" (click)="selectMember(member)" >{{member.userName}}</span>
                           </div>
                       </div>
                     </div>
-                  
+
+                    <div *ngFor="let todo of todoList.todos" class="todos">
+                        <input type="checkbox" value="" />{{todo.text}}
+                    </div>
               </div>
           </div>
         </div>

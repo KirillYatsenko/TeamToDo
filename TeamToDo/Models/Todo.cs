@@ -12,9 +12,10 @@ namespace TeamToDo.Models
     public string Text { get; set; }
     public DateTime Created { get; set; }
     public bool Completed { get; set; }
+    public bool Important { get; set; }
 
+    public virtual TeamTodoUser Assignee { get; set; }
     public virtual TeamTodoUser Creator { get; set; }
     public virtual TodoList TodoList { get; set; }
-
   }
 }

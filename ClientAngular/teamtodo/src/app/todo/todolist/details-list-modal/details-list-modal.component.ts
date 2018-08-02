@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone, ChangeDetectorRef } from '@angular/core';
 import { TodoList } from '../../../shared/models/TodoList';
 import { TodolistComponent } from '../todolist.component';
 import { AccountService } from '../../../shared/services/account.service';
 import { TodoUser } from '../../../shared/models/TodoUser';
 import { TodolistService } from '../../../shared/services/todolist.service';
 import { InvitationService } from '../../../shared/services/invitation.service';
+import { TodoService } from '../../../shared/services/todo.service';
+import { Todo } from '../../../shared/models/Todo';
 declare var $: any;
 
 @Component({
@@ -16,17 +18,63 @@ export class DetailsListModalComponent implements OnInit {
 
   constructor(private accountService : AccountService,
               private todoListService: TodolistService,
-              private invitationService: InvitationService){}
+              private invitationService: InvitationService,
+              private todoService: TodoService,
+              private changeDetector: ChangeDetectorRef){}
 
-  @Input() todoList: TodoList = new TodoList();
   @Input() listComponent: TodolistComponent;
   @Input() currentUser: TodoUser;
+  @Input() todoList: TodoList;
   
+  private MODAL_ID = "modal-details";
+  private MEMBER_DROPDOWN_ID = "member-dropdown";
+  private INVITATION_MODAL_ID = "modal-invitation-link";
+
   invitationLink: string;
   errors: string;
+  dropdownMembers: TodoUser[] = [];
+  selectedMember: TodoUser;
+  importantChecked: boolean = false;
+
+  ngOnInit() {
+
+  }
+
+  setData(){
+      this.importantChecked = false;
+      this.loadTodos();
+      this.loadDropdownMembers();
+      this.selectCurrentUser();
+  }
+
+   loadTodos(){
+
+   }
+
+   loadDropdownMembers(){
+    let cloned = this.listComponent.selectedList.members.map(x => Object.assign({}, x));
+    let clonedCurrentUser = this.listComponent.selectedList.members.findIndex(x=>x.id == this.currentUser.id);
+    cloned.splice(clonedCurrentUser,1);
+
+    this.dropdownMembers = cloned;
+  }
+
+  selectAllMembers(){
+    this.selectedMember = null;
+    $(`#${this.MEMBER_DROPDOWN_ID}`).html("All");
+  }
+
+  selectCurrentUser(){
+    this.selectedMember = this.currentUser;
+    $(`#${this.MEMBER_DROPDOWN_ID}`).html("Me");
+  }
+
+  selectMember(member: TodoUser){
+    this.selectedMember = member;
+    $(`#${this.MEMBER_DROPDOWN_ID}`).html(this.selectedMember.userName);
+  }
 
   addMember(id: string){
-
     this.invitationService.generateInvitationLink(id)
       .subscribe(
         result => {
@@ -37,8 +85,17 @@ export class DetailsListModalComponent implements OnInit {
         }
       )
 
-    $("#modal-details").modal("hide");
-    $("#modal-invitation-link").modal("show");
+    $(`#${this.MODAL_ID}`).modal("hide");
+    $(`#${this.INVITATION_MODAL_ID}`).modal("show");
+   }
+
+   addTodo(){
+    // let todo : Todo = new Todo;
+    // if(this.listComponent.selectedList){
+    //   todo.assigneeId = this.listComponent.selectedMember.id;
+    // }
+
+    // todo.completed = false;
    }
 
   leaveGroup(id: string){
@@ -53,42 +110,9 @@ export class DetailsListModalComponent implements OnInit {
       )
   }
 
-  members: TodoUser[] = [];
+  
 
-  fetchMembers(){
+  
 
-    if(this.listComponent.membersFetched){
-      return;
-    }
-
-    this.members = [];
-    this.currentUser.userName = "Me";
-
-    this.members.push(this.currentUser);
-
-    let currentUserIndex = this.todoList.members.findIndex(x=>x.id == this.currentUser.id);
-    let cloned = this.todoList.members.map(x => Object.assign({}, x));
-    delete cloned[currentUserIndex];
-
-    this.members = this.members.concat(cloned);
-
-    this.listComponent.membersFetched = true;
-  }
-
-  importantSelect(){
-    this.listComponent.importantSelected = ! this.listComponent.importantSelected;
-  }
-
-  memberSelected(member: TodoUser){
-    this.listComponent.selectedMember = member;
-    $("#member-dropdown").html(this.listComponent.selectedMember.userName);
-  }
-
-  selectAllMembers(){
-    $("#member-dropdown").html("All");
-  }
-
-  ngOnInit() {
-  }
 
 }

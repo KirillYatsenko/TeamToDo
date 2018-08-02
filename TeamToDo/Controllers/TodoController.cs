@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TeamTodo.Infrastructure.Services;
+using TeamTodo.Models.Repositories.Interfaces;
 using TeamTodo.Models.User;
 using TeamTodo.Models.ViewModels;
 using TeamToDo.Models;
@@ -15,18 +16,22 @@ using TeamToDo.Models.Repositories;
 
 namespace TeamToDo.Controllers.Api
 {
-  //[Authorize]
+  [Authorize]
   [Route("api/[controller]")]
   public class TodoController : Controller
   {
     private ITodoRepository todoRepository;
     private AccountManager accountManager;
+    private ITodoListRepository todoListRepository;
 
-    public TodoController(ITodoRepository _todoRepository,
-      AccountManager _accountManager)
+    public TodoController(
+      ITodoRepository _todoRepository,
+      AccountManager _accountManager,
+      ITodoListRepository _todoListRepository)
     {
       todoRepository = _todoRepository;
       accountManager = _accountManager;
+      todoListRepository = _todoListRepository;
     }
 
     [HttpGet]
@@ -40,19 +45,28 @@ namespace TeamToDo.Controllers.Api
       return todos;
     }
 
-    //[HttpGet("{id}")]
-    //public async Task<TodoViewModel> Get(int id)
-    //{
-    //  var todo = await todoRepository.Get(id);
-    //  return (TodoViewModel)todo;
-    //}
-
-    [HttpPost]
-    public async void Post([FromBody] TodoViewModel todoViewModel)
+    [HttpPost("[action]")]
+    public async Task<ActionResult> AddTodo([FromBody] TodoViewModel todoViewModel)
     {
+      var user = await accountManager.GetUser();
+      var todoList = await todoListRepository.GetAsync(todoViewModel.ListId);
+
+      if(!todoList.Members.Any(x=>x.UserId == user.Id))
+      {
+        return BadRequest();
+      }
+
       var todo = (Todo)todoViewModel;
       todo.Creator = await accountManager.GetUser();
-      await todoRepository.AddAsync(todo);
+      todo.Created = DateTime.Now;
+      todo.TodoList = todoList;
+
+      if(await todoRepository.AddAsync(todo))
+      {
+        return new OkObjectResult("Todo added");
+      }
+
+      return BadRequest();
     }
 
   }

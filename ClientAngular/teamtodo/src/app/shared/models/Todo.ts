@@ -1,7 +1,7 @@
 export class Todo{
-    creatorName: string;
     creatorId:string;
-    // deadline: string;
+    assigneeId: string;
     completed: boolean;
     text:string;
+    important: boolean;
 }

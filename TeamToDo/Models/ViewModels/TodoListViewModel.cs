@@ -14,7 +14,6 @@ namespace TeamTodo.Models.ViewModels
     public bool Creator { get; set; }
 
     public List<TodoUserViewModel> Admins { get; set; } = new List<TodoUserViewModel>();
-    public List<TodoViewModel> Todos { get; set; } = new List<TodoViewModel>();
     public List<TodoUserViewModel> Members { get; set; } = new List<TodoUserViewModel>();
 
     public static explicit operator TodoListViewModel(TodoList todoList)
@@ -24,7 +23,6 @@ namespace TeamTodo.Models.ViewModels
         Id = todoList.Id.ToString(),
         Title = todoList.Title,
         Created = todoList.Created.ToString(),
-        Todos = todoList.Todos.Cast<TodoViewModel>().ToList(),
       };
 
       foreach (var user in todoList.Members.Select(x=>x.User))
