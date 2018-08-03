@@ -1,6 +1,7 @@
 import { TodoUser } from "./TodoUser";
 
 export class Todo{
+    id: string;
     creatorId:string;
     assigneeId: string;
     completed: boolean;

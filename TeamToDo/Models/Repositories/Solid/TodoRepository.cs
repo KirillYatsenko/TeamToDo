@@ -42,9 +42,10 @@ namespace TeamToDo.Models.Repositories.Solid
       return issue;
     }
 
-    public Task<bool> UpdateAsync(Todo entity)
+    public async Task<bool> UpdateAsync(Todo entity)
     {
-      throw new NotImplementedException();
+      db.Todos.Update(entity);
+      return await RepositoryHelper.ValidateCorectnessAsync(db);
     }
   }
 }

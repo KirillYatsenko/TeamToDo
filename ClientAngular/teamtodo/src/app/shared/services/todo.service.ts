@@ -33,13 +33,25 @@ export class TodoService {
     )
   }
 
-  addTodo(todo: Todo) : Observable<boolean>{
+  addTodo(todo: Todo) : Observable<Todo>{
     let url = this.baseUri+'/todo/AddTodo';
     let authToken = localStorage.getItem('auth_token');
 
     let body = JSON.stringify(todo);
 
-    return this.http.post(url,body,{
+    return this.http.post<Todo>(url,body,{
+      headers:new HttpHeaders(
+        { 'Content-Type': 'application/json'
+        , 'Authorization': `Bearer ${authToken}` }
+      )
+    });
+  }
+
+  completeTodo(id: string) : Observable<boolean>{
+    let url = this.baseUri+'/todo/CompleteTodo';
+    let authToken = localStorage.getItem('auth_token');
+
+    return this.http.post(url,id,{
       responseType:"text",
       headers:new HttpHeaders(
         { 'Content-Type': 'application/json'

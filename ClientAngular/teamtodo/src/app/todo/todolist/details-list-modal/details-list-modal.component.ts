@@ -35,6 +35,9 @@ export class DetailsListModalComponent implements OnInit {
   selectedMember: TodoUser;
   todo: Todo = new Todo();
 
+  todos: Todo[];
+  doneTodos: Todo[];
+
   ngOnInit() {
 
   }
@@ -50,6 +53,8 @@ export class DetailsListModalComponent implements OnInit {
       this.todoService.getTodos(this.listComponent.selectedList.id)
         .subscribe(result=>{
           this.listComponent.selectedList.todos = result;
+          this.todos = result.filter(x=>x.completed == false);
+          this.doneTodos = result.filter(x=>x.completed == true);
         })
    }
 
@@ -100,14 +105,33 @@ export class DetailsListModalComponent implements OnInit {
       this.todoService.addTodo(this.todo)
         .subscribe(
           result=>{
-            if(this.todo.assigneeId){
-              this.todo.assignee = this.listComponent.selectedList.members.find(x=>x.id == this.todo.assigneeId);
-            }
-
-            this.listComponent.selectedList.todos.push(this.todo);
+            this.todos.push(result  );
             this.todo=new Todo();
           }
         )
+   }
+
+   finishTodo(id: string){
+
+    if(this.doneTodos.find(x=>x.id == id)){
+      return;
+    }
+
+     this.todoService.completeTodo(id)
+       .subscribe(result=>{
+
+         if(result){
+           let index = this.todos.findIndex(x=>x.id == id)
+           this.todos[index].completed = true;
+
+           this.doneTodos.push(
+              this.todos[index]
+           )
+
+           this.todos.splice(index,1);
+         }
+
+       })
    }
 
   leaveGroup(id: string){

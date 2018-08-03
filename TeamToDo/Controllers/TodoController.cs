@@ -78,7 +78,27 @@ namespace TeamToDo.Controllers.Api
 
       if(await todoRepository.AddAsync(todo))
       {
-        return new OkObjectResult("Todo added");
+        return new OkObjectResult((TodoViewModel)todo);
+      }
+
+      return BadRequest();
+    }
+
+    [HttpPost("[action]")]
+    public async Task<ActionResult> CompleteTodo([FromBody]int id)
+    { 
+      var user = await accountManager.GetUser();
+      var todo = await todoRepository.GetAsync(id);
+
+      if(todo.Assignee != null && (todo.Assignee.Id != user.Id))
+      {
+        return BadRequest("user not assigneed to this todo");
+      }
+
+      todo.Completed = true;
+      if(await todoRepository.UpdateAsync(todo))
+      {
+        return new OkObjectResult("todo completed");
       }
 
       return BadRequest();
