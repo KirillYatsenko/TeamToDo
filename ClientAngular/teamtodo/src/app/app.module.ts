@@ -7,22 +7,32 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import {RegistrationFormComponent} from './account/registration-form/registration-form.component';
 import { LoginFormComponent } from './account/login-form/login-form.component';
-import { TodoComponent } from './todo/todo/todo.component';
 import { TodolistComponent } from './todo/todolist/todolist.component';
 import { DeleteListModalComponent } from './todo/todolist/delete-list-modal/delete-list-modal.component';
 import { DetailsListModalComponent } from './todo/todolist/details-list-modal/details-list-modal.component';
 import { InvitationComponent } from './todo/todolist/invitation/invitation.component';
+import { HeaderComponent } from './todo/todolist/details-list-modal/header/header.component';
+import { BodyComponent } from './todo/todolist/details-list-modal/body/body.component';
+import { AddTodoFormComponent } from './todo/todolist/details-list-modal/body/add-todo-form/add-todo-form.component';
+import { TodosComponent } from './todo/todolist/details-list-modal/body/todos/todos.component';
+import { TabsComponent } from './todo/todolist/details-list-modal/body/tabs/tabs.component';
+import { InvitationModalComponent } from './todo/todolist/details-list-modal/invitation-modal/invitation-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegistrationFormComponent,
     LoginFormComponent,
-    TodoComponent,
     TodolistComponent,
     DeleteListModalComponent,
     DetailsListModalComponent,
-    InvitationComponent
+    InvitationComponent,
+    HeaderComponent,
+    BodyComponent,
+    AddTodoFormComponent,
+    TodosComponent,
+    TabsComponent,
+    InvitationModalComponent
   ],
   imports: [
     BrowserModule,

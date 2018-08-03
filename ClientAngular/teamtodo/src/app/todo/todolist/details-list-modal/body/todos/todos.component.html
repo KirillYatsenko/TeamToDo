@@ -1,0 +1,18 @@
+<div *ngIf="Modal.listComponent.selectedList?.todos">
+  <div *ngFor="let todo of Modal.listComponent.selectedList?.todos" class="todos">
+         <h4>
+              <i class="far fa-square" style="margin-right: 5px"></i>
+              <i *ngIf="todo.important" class="fas fa-star" style="color:#f4e842"></i>
+              <span *ngIf="!todo.assignee; else assignee" class="badge badge-success">All</span>
+              <ng-template #assignee>
+                  <ng-container *ngIf="todo.assignee?.id == Modal.currentUser.id; else another" >
+                          <span  class="badge badge-danger">Me</span>
+                  </ng-container>
+              </ng-template>
+              <ng-template #another>
+                      <span class="badge badge-info">{{todo.assignee?.userName}}</span>
+              </ng-template>
+              {{todo.text}}
+         </h4>
+  </div>
+</div>

@@ -18,9 +18,9 @@ export class TodoService {
     this.baseUri = configService.getApiURI();
    }
 
-  getTodos() : Observable<Todo[]>{
+  getTodos(listId: string) : Observable<Todo[]>{
 
-    let url = this.baseUri+'/todo';
+    let url = this.baseUri+`/todo/${listId}`;
     let authToken = localStorage.getItem('auth_token');
 
     return this.http.get<Todo[]>(url,
@@ -40,6 +40,7 @@ export class TodoService {
     let body = JSON.stringify(todo);
 
     return this.http.post(url,body,{
+      responseType:"text",
       headers:new HttpHeaders(
         { 'Content-Type': 'application/json'
         , 'Authorization': `Bearer ${authToken}` }

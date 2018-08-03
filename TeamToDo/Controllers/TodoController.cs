@@ -34,15 +34,25 @@ namespace TeamToDo.Controllers.Api
       todoListRepository = _todoListRepository;
     }
 
-    [HttpGet]
-    public async Task<IEnumerable<TodoViewModel>> Get()
+    [HttpGet("{id}")]
+    public async Task<IEnumerable<TodoViewModel>> Get(string id)
     {
       var currentUser = await accountManager.GetUser();
-      var userId = currentUser.Id;
+      var todoList = await todoListRepository.GetAsync(int.Parse(id));
+      var result = new List<TodoViewModel>();
 
-      var todos = todoRepository.All.Cast<TodoViewModel>().ToArray();
+      if(todoList.Members.Select(x=>x.User).ToList().Exists(x=>x.Id == currentUser.Id))
+      {
+        var todos = todoList.Todos;
+        foreach (var todo in todos)
+        {
+          result.Add((TodoViewModel)todo);
+        }
 
-      return todos;
+        return result.ToArray();
+      }
+
+      return null;
     }
 
     [HttpPost("[action]")]
@@ -57,9 +67,14 @@ namespace TeamToDo.Controllers.Api
       }
 
       var todo = (Todo)todoViewModel;
-      todo.Creator = await accountManager.GetUser();
+      todo.Creator = user;
       todo.Created = DateTime.Now;
       todo.TodoList = todoList;
+
+      if (!string.IsNullOrWhiteSpace(todoViewModel.assigneeId))
+      {
+        todo.Assignee = await accountManager.GetUser(todoViewModel.assigneeId);
+      }
 
       if(await todoRepository.AddAsync(todo))
       {

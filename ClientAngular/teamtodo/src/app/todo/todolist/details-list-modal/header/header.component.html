@@ -1,0 +1,11 @@
+<h5 class="modal-title" id="exampleModalLabel"> {{Modal.listComponent.selectedList?.title}}</h5>
+Members: 
+<div class="Members" *ngFor="let member of Modal.dropdownMembers">
+  {{member?.userName}}
+</div>
+  <button class="btn btn-primary"(click)="Modal.addMember(Modal.listComponent.selectedList.id)">Invite</button>
+  <button class="btn btn-danger" (click)="Modal.leaveGroup(Modal.listComponent.selectedList.id)">leave group</button>
+  <button class="btn btn-default">edit group</button>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>

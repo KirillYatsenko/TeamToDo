@@ -24,7 +24,6 @@ export class DetailsListModalComponent implements OnInit {
 
   @Input() listComponent: TodolistComponent;
   @Input() currentUser: TodoUser;
-  @Input() todoList: TodoList;
   
   private MODAL_ID = "modal-details";
   private MEMBER_DROPDOWN_ID = "member-dropdown";
@@ -34,21 +33,24 @@ export class DetailsListModalComponent implements OnInit {
   errors: string;
   dropdownMembers: TodoUser[] = [];
   selectedMember: TodoUser;
-  importantChecked: boolean = false;
+  todo: Todo = new Todo();
 
   ngOnInit() {
 
   }
 
   setData(){
-      this.importantChecked = false;
+      this.todo = new Todo();
       this.loadTodos();
       this.loadDropdownMembers();
       this.selectCurrentUser();
   }
 
    loadTodos(){
-
+      this.todoService.getTodos(this.listComponent.selectedList.id)
+        .subscribe(result=>{
+          this.listComponent.selectedList.todos = result;
+        })
    }
 
    loadDropdownMembers(){
@@ -90,12 +92,22 @@ export class DetailsListModalComponent implements OnInit {
    }
 
    addTodo(){
-    // let todo : Todo = new Todo;
-    // if(this.listComponent.selectedList){
-    //   todo.assigneeId = this.listComponent.selectedMember.id;
-    // }
+      if(this.selectedMember){
+        this.todo.assigneeId = this.selectedMember.id;
+      }
+      this.todo.listId = this.listComponent.selectedList.id;
 
-    // todo.completed = false;
+      this.todoService.addTodo(this.todo)
+        .subscribe(
+          result=>{
+            if(this.todo.assigneeId){
+              this.todo.assignee = this.listComponent.selectedList.members.find(x=>x.id == this.todo.assigneeId);
+            }
+
+            this.listComponent.selectedList.todos.push(this.todo);
+            this.todo=new Todo();
+          }
+        )
    }
 
   leaveGroup(id: string){

@@ -32,6 +32,11 @@ namespace TeamTodo.Infrastructure.Services
       return await userManager.FindByEmailAsync(userEmail);
     }
 
+    public async Task<TeamTodoUser> GetUser(string id)
+    {
+      return await userManager.FindByIdAsync(id);
+    }
+
     //private async Task<TeamTodoUser> LoadRelatedEntities(TeamTodoUser user)
     //{
     //  user.

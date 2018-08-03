@@ -1,0 +1,24 @@
+<form #todoForm="ngForm">
+  <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <button [disabled]="!todoForm.valid" (click)="Modal.addTodo()" class="btn btn-outline-secondary" type="button">Add</button>
+      </div>
+      <input type="text" class="form-control" placeholder="new todo"
+       aria-label="" aria-describedby="basic-addon1"
+       required name="text" 
+       [(ngModel)]="Modal.todo.text">
+      <div class="input-group-append">
+            <button (click)="changeImportant()" [ngClass]="{'selected-important':this.Modal.todo.important}" class="btn btn-outline-secondary" type="button">
+               <i class="far fa-star"></i>
+             </button>
+          <button id="member-dropdown" class="btn btn-default btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          </button>
+          <div class="dropdown-menu">
+              <span class="dropdown-item" (click)="Modal.selectCurrentUser()" >Me</span>
+              <span class="dropdown-item" (click)="Modal.selectAllMembers()" >All</span>
+              <div role="separator" class="dropdown-divider"></div>
+              <span *ngFor="let member of Modal.dropdownMembers" class="dropdown-item" (click)="Modal.selectMember(member)" >{{member.userName}}</span>
+          </div>
+      </div>
+    </div>
+</form>
