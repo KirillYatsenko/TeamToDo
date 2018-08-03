@@ -1,8 +1,8 @@
 <div class="container">
 
-    
+  <app-navbar [UserName]="currentUser?.userName"></app-navbar>
 
-<h1>User: {{currentUser?.email}}</h1>
+<!-- <h1>User: {{currentUser?.email}}</h1> -->
 
   <div class="row">
     <div class="col-md-2">
@@ -34,16 +34,16 @@
                         </div>
                       </div>
                   </div>
-                  <button class="btn btn-danger" (click)="deleteListRequest(todolist.id)"
+                  <button *ngIf="todolist.creator.id == currentUser.id" class="btn btn-danger" (click)="deleteListRequest(todolist.id)"
                   data-toggle="modal" data-target="#confirmationDialog">Delete</button>
                 </div>
           </div>
         </div>
   </div>
   </div>
-  
-
 </div> 
+
+
 <app-details-list-modal #details [currentUser]="currentUser" [listComponent]="this"></app-details-list-modal>
 <app-delete-list-modal [todoList]="todoListDeleteRequest" [deleteComponent]="this"></app-delete-list-modal>
 

@@ -11,11 +11,11 @@ namespace TeamTodo.Models.ViewModels
     public string Id { get; set; }
     public string assigneeId { get; set; }
     public int ListId { get; set; }
-    public bool Completed { get; set; }
     public string Text { get; set; }
     public string Created { get; set; }
     public bool Important { get; set; }
 
+    public TodoUserViewModel CompletedBy { get; set; }
     public TodoUserViewModel Creator { get; set; }
     public TodoUserViewModel Assignee { get; set; }
 
@@ -25,7 +25,6 @@ namespace TeamTodo.Models.ViewModels
       {
         Id = todo.Id.ToString(),
         Creator = (TodoUserViewModel)todo.Creator,
-        Completed = todo.Completed,
         Important = todo.Important,
         Text = todo.Text,
         ListId = todo.TodoList.Id,
@@ -37,6 +36,11 @@ namespace TeamTodo.Models.ViewModels
         result.Assignee = (TodoUserViewModel)todo.Assignee;
       }
 
+      if(todo.CompletedBy != null)
+      {
+        result.CompletedBy = (TodoUserViewModel)todo.CompletedBy;
+       }
+
       return result;
     }
 
@@ -45,7 +49,6 @@ namespace TeamTodo.Models.ViewModels
       return new Todo
       {
         Created = DateTime.Now,
-        Completed = todoViewModel.Completed,
         Text = todoViewModel.Text,
         Important = todoViewModel.Important
       };

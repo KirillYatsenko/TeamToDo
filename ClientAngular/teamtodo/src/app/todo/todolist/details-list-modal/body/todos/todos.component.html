@@ -3,9 +3,14 @@
     <div class="list-group">
               <button (click)="Modal.finishTodo(todo.id)" [disabled]="todo.assignee && (todo.assignee?.id != Modal.currentUser.id)"
                *ngFor="let todo of Todos" href="#" 
-               class="list-group-item list-group-item-action custom-list-group-item">
+               class="list-group-item list-group-item-action custom-list-group-item"
+               [attr.data-trigger]="!todo.assignee && todo.completedBy ? 'hover' : null"
+               data-content="Popover with data-trigger" 
+               rel="popover" data-placement="top" 
+               id = "completedby-popover"
+               >
                     <h5>
-                          <i *ngIf="!todo.completed; else completed" class="far fa-square margin-right-5" ></i>
+                          <i *ngIf="!todo.completedBy; else completed" class="far fa-square margin-right-5" ></i>
                           <ng-template #completed>
                               <i class="far fa-check-square margin-right-5"></i>
                           </ng-template>
@@ -22,6 +27,11 @@
                           </ng-template>
                           {{todo.text}}
                     </h5>
+
+                    <!-- (Modal.listComponent.selectedList?.admin.some(x=>x.id == Modal.currentUser.id)) -->
+                    <!-- (todo.creator.id == Modal.currentUser.id) ||  -->
+                    <button *ngIf="todo.creator.id == Modal.currentUser.id && !todo.completedBy" 
+                    (click)="Modal.deleteTodo(todo)" class="btn btn-danger">delete</button>
                 </button>
     </div>
 </div>

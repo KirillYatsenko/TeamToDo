@@ -31,6 +31,8 @@ export class TodolistComponent implements OnInit {
 
   ngOnInit() {
 
+    $('#popoverOption').popover({ trigger: "hover" });
+
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (param: any)=>{
           this.open = param['open'];

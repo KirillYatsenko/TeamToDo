@@ -52,7 +52,6 @@ namespace TeamTodo.Controllers
       foreach (var item in userTodoLists)
       {
         var viewModel = (TodoListViewModel)item;
-        viewModel.Creator = item.Creator.Id == user.Id;
         result.Add(viewModel);
       }
 

@@ -35,8 +35,10 @@ export class DetailsListModalComponent implements OnInit {
   selectedMember: TodoUser;
   todo: Todo = new Todo();
 
-  todos: Todo[];
+  importantTodos: Todo[] = [];
+  todos: Todo[] = [];
   doneTodos: Todo[];
+  todoDeletionRequet:boolean = false;
 
   ngOnInit() {
 
@@ -53,8 +55,9 @@ export class DetailsListModalComponent implements OnInit {
       this.todoService.getTodos(this.listComponent.selectedList.id)
         .subscribe(result=>{
           this.listComponent.selectedList.todos = result;
-          this.todos = result.filter(x=>x.completed == false);
-          this.doneTodos = result.filter(x=>x.completed == true);
+          this.importantTodos = result.filter(x=>!x.completedBy && x.important);
+          this.todos = result.filter(x=>!x.completedBy && !x.important);
+          this.doneTodos = result.filter(x=>x.completedBy);
         })
    }
 
@@ -105,13 +108,47 @@ export class DetailsListModalComponent implements OnInit {
       this.todoService.addTodo(this.todo)
         .subscribe(
           result=>{
-            this.todos.push(result  );
+            if(result.important){
+              this.importantTodos.push(result);
+            }else{
+              this.todos.push(result);
+            }
+            
             this.todo=new Todo();
           }
-        )
+        );
+   }
+
+   deleteTodo(todo: Todo){
+    this.todoDeletionRequet = true;
+
+    this.todoService.deleteTodo(todo.id)
+      .subscribe(
+        result=>{
+          
+          if(result){
+
+            let todos = this.todos;
+
+            if(todo.important){
+              todos = this.importantTodos;
+            }
+
+            todos.splice(
+              todos.findIndex(x=>x.id == todo.id),1
+            )
+          }
+
+          this.todoDeletionRequet = false;
+        }
+      );
    }
 
    finishTodo(id: string){
+
+    if(this.todoDeletionRequet){
+      return;
+    }
 
     if(this.doneTodos.find(x=>x.id == id)){
       return;
@@ -121,14 +158,23 @@ export class DetailsListModalComponent implements OnInit {
        .subscribe(result=>{
 
          if(result){
-           let index = this.todos.findIndex(x=>x.id == id)
-           this.todos[index].completed = true;
+
+          let todos : Todo[];
+          todos = this.todos;
+
+           let index = todos.findIndex(x=>x.id == id)
+           if(index == -1){
+            todos = this.importantTodos;
+            index = todos.findIndex(x=>x.id == id)
+           }
+
+           todos[index].completedBy = this.currentUser;
 
            this.doneTodos.push(
-              this.todos[index]
+            todos[index]
            )
 
-           this.todos.splice(index,1);
+           todos.splice(index,1);
          }
 
        })

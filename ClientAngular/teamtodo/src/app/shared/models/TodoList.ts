@@ -8,6 +8,7 @@ export class TodoList{
       admin: TodoUser[] = [];
       todos: Todo[] = [];
       members: TodoUser[] = [];
+      creator:TodoUser;
 
       userIsMember:boolean;
 }

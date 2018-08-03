@@ -11,8 +11,9 @@ namespace TeamToDo.Models
     public int Id { get; set; }
     public string Text { get; set; }
     public DateTime Created { get; set; }
-    public bool Completed { get; set; }
     public bool Important { get; set; }
+
+    public virtual TeamTodoUser CompletedBy { get; set; }
 
     public virtual TeamTodoUser Assignee { get; set; }
     public virtual TeamTodoUser Creator { get; set; }

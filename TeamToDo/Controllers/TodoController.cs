@@ -41,7 +41,7 @@ namespace TeamToDo.Controllers.Api
       var todoList = await todoListRepository.GetAsync(int.Parse(id));
       var result = new List<TodoViewModel>();
 
-      if(todoList.Members.Select(x=>x.User).ToList().Exists(x=>x.Id == currentUser.Id))
+      if (todoList.Members.Select(x => x.User).ToList().Exists(x => x.Id == currentUser.Id))
       {
         var todos = todoList.Todos;
         foreach (var todo in todos)
@@ -61,9 +61,9 @@ namespace TeamToDo.Controllers.Api
       var user = await accountManager.GetUser();
       var todoList = await todoListRepository.GetAsync(todoViewModel.ListId);
 
-      if(!todoList.Members.Any(x=>x.UserId == user.Id))
+      if (!todoList.Members.Any(x => x.UserId == user.Id))
       {
-        return BadRequest();
+        return BadRequest("user not a member");
       }
 
       var todo = (Todo)todoViewModel;
@@ -76,9 +76,29 @@ namespace TeamToDo.Controllers.Api
         todo.Assignee = await accountManager.GetUser(todoViewModel.assigneeId);
       }
 
-      if(await todoRepository.AddAsync(todo))
+      if (await todoRepository.AddAsync(todo))
       {
         return new OkObjectResult((TodoViewModel)todo);
+      }
+
+      return BadRequest();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteTodo(int id)
+    {
+      var user = await accountManager.GetUser();
+      var todo = await todoRepository.GetAsync(id);
+      var todoList = todo.TodoList;
+
+      if(todo.Creator.Id != user.Id && todoList.Members.ToList().Exists(x=>x.UserId == user.Id))
+      {
+        return BadRequest("user not a creator , not an admin");
+      }
+
+      if(await todoRepository.DeleteAsync(todo))
+      {
+        return new OkObjectResult("todo deleted");
       }
 
       return BadRequest();
@@ -95,7 +115,7 @@ namespace TeamToDo.Controllers.Api
         return BadRequest("user not assigneed to this todo");
       }
 
-      todo.Completed = true;
+      todo.CompletedBy = user;
       if(await todoRepository.UpdateAsync(todo))
       {
         return new OkObjectResult("todo completed");

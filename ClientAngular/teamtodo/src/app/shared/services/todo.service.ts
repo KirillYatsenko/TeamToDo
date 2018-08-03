@@ -18,6 +18,12 @@ export class TodoService {
     this.baseUri = configService.getApiURI();
    }
 
+   headers:HttpHeaders = new HttpHeaders(
+    { 'Content-Type': 'application/json'
+     , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+    }
+   )
+
   getTodos(listId: string) : Observable<Todo[]>{
 
     let url = this.baseUri+`/todo/${listId}`;
@@ -45,6 +51,20 @@ export class TodoService {
         , 'Authorization': `Bearer ${authToken}` }
       )
     });
+  }
+
+  deleteTodo(id: string) : Observable<boolean>{
+    let url = this.baseUri+`/todo/${id}`;
+    let authToken = localStorage.getItem('auth_token');
+
+    return this.http.delete(url,{
+      responseType:"text",
+      headers: this.headers
+    }).pipe(
+      map(result=>{
+        return true;
+      })
+    )
   }
 
   completeTodo(id: string) : Observable<boolean>{

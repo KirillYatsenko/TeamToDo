@@ -46,6 +46,8 @@ namespace TeamTodo.Models.Repositories.Solid
 
     public async Task<bool> DeleteAsync(TodoList entity)
     {
+      db.Invitations.RemoveRange(entity.Invitations);
+      db.Todos.RemoveRange(entity.Todos);
       db.TodoLists.Remove(entity);
       return await RepositoryHelper.ValidateCorectnessAsync(db);
     }

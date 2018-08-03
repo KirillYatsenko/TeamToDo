@@ -11,7 +11,7 @@ namespace TeamTodo.Models.ViewModels
     public string Id { get; set; }
     public string Title { get; set; }
     public string Created { get; set; }
-    public bool Creator { get; set; }
+    public TodoUserViewModel Creator { get; set; }
 
     public List<TodoUserViewModel> Admins { get; set; } = new List<TodoUserViewModel>();
     public List<TodoUserViewModel> Members { get; set; } = new List<TodoUserViewModel>();
@@ -23,6 +23,7 @@ namespace TeamTodo.Models.ViewModels
         Id = todoList.Id.ToString(),
         Title = todoList.Title,
         Created = todoList.Created.ToString(),
+        Creator = (TodoUserViewModel)todoList.Creator
       };
 
       foreach (var user in todoList.Members.Select(x=>x.User))
