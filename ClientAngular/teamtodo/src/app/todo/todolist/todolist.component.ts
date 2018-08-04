@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TodolistService } from '../../shared/services/todolist.service';
 import { TodoList } from '../../shared/models/TodoList';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountService } from '../../shared/services/account.service';
 import { TodoUser } from '../../shared/models/TodoUser';
+import { DetailsListModalComponent } from './details-list-modal/details-list-modal.component';
 declare var $: any;
 
 
@@ -13,9 +14,12 @@ declare var $: any;
   templateUrl: './todolist.component.html',
   styleUrls: ['./todolist.component.css']
 })
-export class TodolistComponent implements OnInit {
+export class TodolistComponent implements AfterViewInit {
 
   private subscription: Subscription;
+
+  @ViewChild(DetailsListModalComponent)
+  private detailsComponent: DetailsListModalComponent;
 
   TodoLists: TodoList[] = [];
   currentUser: TodoUser;
@@ -31,7 +35,7 @@ export class TodolistComponent implements OnInit {
 
   ngOnInit() {
 
-    $('#popoverOption').popover({ trigger: "hover" });
+    $('[data-toggle="tooltip"]').tooltip();
 
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (param: any)=>{
@@ -42,6 +46,10 @@ export class TodolistComponent implements OnInit {
     this.loadLists();
 
     this.loadCurrentUser();
+  }
+
+  ngAfterViewInit() {
+    console.log('gogogo');
   }
 
   loadCurrentUser(){
@@ -63,6 +71,7 @@ export class TodolistComponent implements OnInit {
 
       if(this.open){
         this.selectList(this.open);
+        this.detailsComponent.setData();
         $("#modal-details").modal("show");
       }
 

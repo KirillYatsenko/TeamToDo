@@ -17,7 +17,14 @@ export class TodosComponent implements OnInit {
    }
 
   ngOnInit() {
-    $('#completedby-popover').popover();
+    $('body').tooltip({
+      selector: '[data-toggle=tooltip]'
+     });
+    // $('[data-toggle="tooltip"]').tooltip();
+  }
+
+  createCompletedTooltip(todo: Todo): string{
+    return `completed by ${todo.completedBy.userName}`;
   }
 
 }

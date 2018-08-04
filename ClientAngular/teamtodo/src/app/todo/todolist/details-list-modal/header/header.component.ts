@@ -11,6 +11,15 @@ import { DetailsListModalComponent } from '../details-list-modal.component';
 export class HeaderComponent implements OnInit {
 
   @Input() Modal: DetailsListModalComponent;
+  
+  BadgeTypes: string[] = ['primary','secondary','success','danger','warning','info','light','dark'];
+  BadgeTypeIndex: number = 0;
+
+  selectBadgeType(index: number) : string{
+    if(index <= this.BadgeTypes.length){
+      return this.BadgeTypes[index];
+    }
+  }
 
   constructor() { }
 

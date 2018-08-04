@@ -1,66 +1,77 @@
 <div class="container">
 
-<div class="row">
-  <div class="col-md-6 new-user-alert">
-      <div *ngIf="brandNew" class="alert alert-success" role="alert">
-          <strong>All set!</strong> Please login with your account
-      </div>  
-      <h2>Login</h2>        
-  </div>
+<div style="margin-top:10%;">
+        <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 new-user-alert">
+                    <div *ngIf="brandNew" class="alert alert-success" role="alert">
+                        <strong>All set!</strong> Please login with your account
+                    </div>  
+                </div>
+        </div>
+              
+              <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                        <h2 style="text-align: center">Sign In</h2>        
+
+                    <form #loginForm="ngForm" novalidate (ngSubmit)="login()">
+                        
+                        <div class="form-group">
+                          <label for="email">email</label>
+                          <input id="email" type="text" required name="email" 
+                          class="form-control"
+                           [(ngModel)]="credentials.email"
+                           #email="ngModel">
+                        </div>
+              
+                        <div *ngIf="email.invalid && (email.dirty || email.touched)"
+                        class="alert alert-danger">
+                          <div *ngIf="email.errors.required">
+                              email is required.
+                          </div>
+                      </div>
+              
+                        <div class="form-group">
+                          <label for="password">password</label>
+                          <input type="password"
+                           class="form-control" id="password"
+                            required name="password" 
+                            [(ngModel)] = "credentials.password"
+                            #password="ngModel">
+                        </div>  
+              
+                        <div *ngIf="password.invalid && (password.dirty || password.touched)"
+                        class="alert alert-danger">
+                          <div *ngIf="password.errors.required">
+                              password is required.
+                          </div>
+                      </div>
+                        
+              
+                      <div style="text-align: center">
+                        <button style="width: 40%;" type="submit" class="btn btn-success" [disabled]="loginForm.invalid">Sign in</button>
+                            <br/> <small  routerLink='/registration' class="font-weight-light sign-in-up-btn">Sign up</small>
+                      </div>
+                       
+                      
+
+                       
+              
+                          <!-- <div style="text-align: center;" class="form-group">
+                            <button routerLink='/registration' type="submit" class="btn btn-success">Registration</button>
+                         </div> -->
+
+                        <div *ngIf="errors" class="alert alert-danger">
+                                {{errors}}
+                              </div> 
+              
+                      </form>
+                 </div>
+              </div>
 </div>
 
-<div class="row">
-  <div class="col-md-6">
-      <form #loginForm="ngForm" novalidate (ngSubmit)="login()">
-          
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="text" required name="email" 
-            class="form-control"
-             [(ngModel)]="credentials.email"
-             #email="ngModel">
-          </div>
 
-          <div *ngIf="email.invalid && (email.dirty || email.touched)"
-          class="alert alert-danger">
-            <div *ngIf="email.errors.required">
-                Email is required.
-            </div>
-        </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password"
-             class="form-control" id="password"
-              required name="password" 
-              [(ngModel)] = "credentials.password"
-              #password="ngModel">
-          </div>  
-
-          <div *ngIf="password.invalid && (password.dirty || password.touched)"
-          class="alert alert-danger">
-            <div *ngIf="password.errors.required">
-                Password is required.
-            </div>
-        </div>
-          
-
-          <div class="form-group">
-              <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
-          </div>
-
-          <div *ngIf="errors" class="alert alert-danger">
-              {{errors}}
-            </div> 
-          
-            <div class="form-group">
-              <button routerLink='/registration' type="submit" class="btn btn-primary">Registration</button>
-          </div>
-          
-
-        </form>
-   </div>
-</div>
 
 </div>
 

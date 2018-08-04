@@ -1,8 +1,29 @@
 <h5 class="modal-title" id="exampleModalLabel"> {{Modal.listComponent.selectedList?.title}}</h5>
-Members: 
-<div class="Members" *ngFor="let member of Modal.dropdownMembers">
-  {{member?.userName}}
+
+<div>
+    <span *ngIf="Modal.dropdownMembers.length>0; else nomembers">
+        Members:
+            <span style="margin-left: 3px;"
+            *ngFor="let member of Modal.dropdownMembers; let i = index" class="badge badge-{{selectBadgeType(i)}}">{{member?.userName}}</span>
+    </span>
+        <ng-template #nomembers>
+            Not members yet. Invite them! ->
+        </ng-template>
+
+        <span  class="badge badge-success invitation-button"
+        data-toggle="tooltip" data-placement="top" title="Invite friends"
+         (click)="Modal.addMember(Modal.listComponent.selectedList.id)"><strong>+</strong></span>
+
+         <div class="dropdown settings">
+           <i class="fas fa-ellipsis-v fa-lg dropdown-toggle" data-toggle="dropdown"  aria-expanded="false"></i>
+            <div class="dropdown-menu">
+              <button (click)="Modal.addMember(Modal.listComponent.selectedList.id)" class="dropdown-item">Invite friends</button>
+              <button (click)="Modal.leaveGroup(Modal.listComponent.selectedList.id)" class="dropdown-item" >Leave group</button>
+            </div>
+          </div>
 </div>
-  <button class="btn btn-primary"(click)="Modal.addMember(Modal.listComponent.selectedList.id)">Invite</button>
-  <button class="btn btn-danger" (click)="Modal.leaveGroup(Modal.listComponent.selectedList.id)">leave group</button>
-  <!-- <button class="btn btn-default">edit group</button> -->
+
+   
+
+
+  

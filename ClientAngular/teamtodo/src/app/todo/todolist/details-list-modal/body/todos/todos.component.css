@@ -5,3 +5,16 @@
 .custom-list-group-item{
     padding: 5px !important;
 }
+
+.delete-btn{
+    position: absolute;
+    right: 10px;
+}
+
+.delete-btn:hover{
+    color: #c71a1a;
+    position: absolute;
+    right: 10px;
+}
+
+

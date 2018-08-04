@@ -4,10 +4,9 @@
               <button (click)="Modal.finishTodo(todo.id)" [disabled]="todo.assignee && (todo.assignee?.id != Modal.currentUser.id)"
                *ngFor="let todo of Todos" href="#" 
                class="list-group-item list-group-item-action custom-list-group-item"
-               [attr.data-trigger]="!todo.assignee && todo.completedBy ? 'hover' : null"
-               data-content="Popover with data-trigger" 
-               rel="popover" data-placement="top" 
-               id = "completedby-popover"
+               data-toggle="tooltip"
+               data-placement="top"
+               [attr.title]="todo.completedBy&&!todo.assignee ? createCompletedTooltip(todo) : null"
                >
                     <h5>
                           <i *ngIf="!todo.completedBy; else completed" class="far fa-square margin-right-5" ></i>
@@ -26,12 +25,13 @@
                                   <span class="badge badge-info">{{todo.assignee?.userName}}</span>
                           </ng-template>
                           {{todo.text}}
+
+                            <span *ngIf="todo.creator.id == Modal.currentUser.id && !todo.completedBy" 
+                              (click)="Modal.deleteTodo(todo)" class="delete-btn align-middle"><i class="fas fa-trash"></i></span>
                     </h5>
 
                     <!-- (Modal.listComponent.selectedList?.admin.some(x=>x.id == Modal.currentUser.id)) -->
                     <!-- (todo.creator.id == Modal.currentUser.id) ||  -->
-                    <button *ngIf="todo.creator.id == Modal.currentUser.id && !todo.completedBy" 
-                    (click)="Modal.deleteTodo(todo)" class="btn btn-danger">delete</button>
                 </button>
     </div>
 </div>

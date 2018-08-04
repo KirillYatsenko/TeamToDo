@@ -12,4 +12,17 @@
     cursor:pointer;
     color:blue;
     text-decoration:underline;
-}
+  }
+
+  .sign-in-up-btn{
+    cursor:pointer;
+    color:blue;
+  }
+  
+  .sign-in-up-btn:hover{
+    color:blue;
+    text-decoration: underline; 
+    text-decoration:underline;
+  }
+
+
