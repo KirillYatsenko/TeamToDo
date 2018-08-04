@@ -1,4 +1,4 @@
-<div *ngIf="Modal.listComponent.selectedList?.todos">
+<div *ngIf="Modal.listComponent.selectedList">
 
     <div class="list-group">
               <button (click)="Modal.finishTodo(todo.id)" [disabled]="todo.assignee && (todo.assignee?.id != Modal.currentUser.id)"

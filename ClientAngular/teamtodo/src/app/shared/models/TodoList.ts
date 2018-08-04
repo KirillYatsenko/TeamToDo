@@ -9,6 +9,7 @@ export class TodoList{
       todos: Todo[] = [];
       members: TodoUser[] = [];
       creator:TodoUser;
+      todosCount: number = 0;
 
       userIsMember:boolean;
 }

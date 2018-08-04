@@ -12,6 +12,7 @@ namespace TeamTodo.Models.ViewModels
     public string Title { get; set; }
     public string Created { get; set; }
     public TodoUserViewModel Creator { get; set; }
+    public int TodosCount { get; set; }
 
     public List<TodoUserViewModel> Admins { get; set; } = new List<TodoUserViewModel>();
     public List<TodoUserViewModel> Members { get; set; } = new List<TodoUserViewModel>();
@@ -26,17 +27,19 @@ namespace TeamTodo.Models.ViewModels
         Creator = (TodoUserViewModel)todoList.Creator
       };
 
-      foreach (var user in todoList.Members.Select(x=>x.User))
+      foreach (var user in todoList.Members.Select(x => x.User))
       {
         var casterUser = (TodoUserViewModel)user;
         viewModel.Members.Add(casterUser);
       }
 
-      foreach (var admin in todoList.Admins.Select(x=>x.Admin))
+      foreach (var admin in todoList.Admins.Select(x => x.Admin))
       {
         var castedAdmin = (TodoUserViewModel)admin;
         viewModel.Admins.Add(castedAdmin);
       }
+
+      viewModel.TodosCount = todoList.Todos.Count(x => x.CompletedBy == null);
 
       return viewModel;
     }

@@ -25,4 +25,16 @@
     text-decoration:underline;
   }
 
+.delete-btn{
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+  }
 
+
+.delete-btn:hover{
+  cursor: pointer;
+  color: #c71a1a;
+  position: absolute;
+  right: 10px;
+}
