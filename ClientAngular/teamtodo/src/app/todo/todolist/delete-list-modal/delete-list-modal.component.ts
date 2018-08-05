@@ -1,6 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { TodoList } from '../../../shared/models/TodoList';
 import { TodolistComponent } from '../todolist.component';
+import { $ } from '../../../../../node_modules/protractor';
 
 @Component({
   selector: 'app-delete-list-modal',
@@ -20,6 +21,7 @@ export class DeleteListModalComponent implements OnInit {
   }
 
   confirmDeletion(id: string){
+   
     this.deleteComponent.confirmDeletion(id);
   }
 

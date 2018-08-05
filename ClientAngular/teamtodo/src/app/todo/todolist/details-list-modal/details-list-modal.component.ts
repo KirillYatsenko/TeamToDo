@@ -39,6 +39,7 @@ export class DetailsListModalComponent implements OnInit {
   todos: Todo[] = [];
   doneTodos: Todo[];
   todoDeletionRequet:boolean = false;
+  unreadDoneTodos: boolean = false;
 
   ngOnInit() {
 
@@ -115,6 +116,7 @@ export class DetailsListModalComponent implements OnInit {
             }
             
             this.todo=new Todo();
+           this.listComponent.selectedList.todosCount+=1;
           }
         );
    }
@@ -140,6 +142,8 @@ export class DetailsListModalComponent implements OnInit {
           }
 
           this.todoDeletionRequet = false;
+          this.listComponent.selectedList.todosCount-=1;
+
         }
       );
    }
@@ -175,6 +179,9 @@ export class DetailsListModalComponent implements OnInit {
            )
 
            todos.splice(index,1);
+
+           this.unreadDoneTodos = true;
+           this.listComponent.selectedList.todosCount-=1;
          }
 
        })

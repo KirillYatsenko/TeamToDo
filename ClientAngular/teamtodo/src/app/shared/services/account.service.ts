@@ -53,6 +53,22 @@ export class AccountService {
     return !!localStorage.getItem('auth_token');
   }
 
+  async validateToken(){
+    let url = this.baseUri + '/account/ValidateToken';
+
+    return await this.http.get(url,{
+      responseType:"text",
+      headers:new HttpHeaders(
+       { 'Content-Type': 'application/json'
+        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+       }
+      )
+    }).toPromise().catch(x=>{
+        return false;
+    })
+    
+  }
+
   getCurrentUser() :Observable<TodoUser>{
     let url = this.baseUri + '/account/GetCurrentUser';
     

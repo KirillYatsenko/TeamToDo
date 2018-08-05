@@ -89,7 +89,7 @@ namespace TeamTodo.Controllers
           && await adminTodoListRepository.AddAsync(new TodoListAdmin() { Admin = user, TodoList = todo })
          )
         {
-          return new OkObjectResult("Todolist added");
+          return new OkObjectResult((TodoListViewModel)todo);
         }
 
       }

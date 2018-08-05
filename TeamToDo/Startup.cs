@@ -78,7 +78,9 @@ namespace TeamTodo
           ValidIssuer = "teamtodo.com",
           ValidateAudience = true,
           ValidAudience = "teamtodo.com",
-        };
+          ValidateLifetime = true, //validate the expiration and not before values in the token
+          ClockSkew = TimeSpan.FromMinutes(1) //5 minute tolerance for the expiration date
+       };
       });
 
       setRepositoriesTransient(services);

@@ -40,22 +40,16 @@ export class TodolistService {
     return this.http.get<TodoList>(url,this.options);
   }
 
-  addList(title: string) : Observable<any>{
+  addList(title: string) : Observable<TodoList>{
      let url = this.baseUri+'/todolist';
 
-    return this.http.post(url,`"${title}"`,{
-      responseType:"text",
+    return this.http.post<TodoList>(url,`"${title}"`,{
       headers:new HttpHeaders(
        { 'Content-Type': 'application/json'
         , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
        }
       )
-    } )
-      .pipe(
-        map(result=>{
-          return true;
-        })
-      );
+    } );
   }
 
   deleteList(id: string) : Observable<boolean>{

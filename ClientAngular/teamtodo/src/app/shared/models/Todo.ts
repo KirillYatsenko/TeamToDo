@@ -10,4 +10,5 @@ export class Todo{
     completedBy: TodoUser;
     creator: TodoUser;
     assignee: TodoUser;
+    showChecked: boolean = false;
 }

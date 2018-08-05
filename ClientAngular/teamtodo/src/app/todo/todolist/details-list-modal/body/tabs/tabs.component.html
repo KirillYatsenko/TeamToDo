@@ -3,7 +3,9 @@
     <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo" role="tab" aria-controls="todos" aria-selected="true">Todos</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Done</a>
+    <a (click)="removeNotification()" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Done
+      <span *ngIf="this.Modal.unreadDoneTodos" style="margin-left: 5px; color:green !important;" class="badge badge-light"><strong>!</strong></span>
+    </a>
   </li>
 </ul>
 <div class="tab-content" id="myTabContent">

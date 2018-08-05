@@ -13,13 +13,13 @@ export class TodosComponent implements OnInit {
   @Input() Todos: Todo[];
   @Input() Modal: DetailsListModalComponent;
 
+  showChecked:boolean = false;
+
   constructor() {
    }
 
   ngOnInit() {
-    $('body').tooltip({
-      selector: '[data-toggle=tooltip]'
-     });
+   
     // $('[data-toggle="tooltip"]').tooltip();
   }
 

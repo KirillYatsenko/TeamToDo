@@ -15,4 +15,8 @@ export class TabsComponent implements OnInit {
   ngOnInit() {
   }
 
+  removeNotification(){
+    this.Modal.unreadDoneTodos = false;
+  }
+
 }

@@ -74,6 +74,13 @@ namespace TeamToDo.Controllers.api
       }
     }
 
+    [Authorize]
+    [HttpGet]
+    public ActionResult ValidateToken()
+    {
+      return new OkObjectResult("Token is valid");
+    }
+
     private async Task<bool> IsValidLoginData([FromBody]LoginViewModel loginData)
     {
       if (ModelState.IsValid)
@@ -106,10 +113,11 @@ namespace TeamToDo.Controllers.api
           issuer: "teamtodo.com",
           audience: "teamtodo.com",
           claims: claims,
-          expires: DateTime.Now.AddMinutes(30),
+          expires: DateTime.Now.AddMonths(1),
           signingCredentials: creds);
 
       return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
   }
 }

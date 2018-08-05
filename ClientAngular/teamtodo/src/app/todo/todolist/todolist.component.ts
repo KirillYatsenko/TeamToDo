@@ -28,6 +28,7 @@ export class TodolistComponent implements AfterViewInit {
   errors: string;
   open: string;
   todoListDeleteRequest: TodoList = new TodoList();
+  todoListDeleteRequestProcessing: boolean = false;
 
   constructor( private todolistService: TodolistService,  
     private activatedRoute: ActivatedRoute,
@@ -35,7 +36,14 @@ export class TodolistComponent implements AfterViewInit {
 
   ngOnInit() {
 
-    $('[data-toggle="tooltip"]').tooltip();
+    let self = this;
+    $('#confirmationDialog').on('hide.bs.modal', function (e) {
+      self.todoListDeleteRequestProcessing = false;
+    })
+
+    $('body').tooltip({
+      selector: '[data-toggle=tooltip]'
+     });
 
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (param: any)=>{
@@ -67,7 +75,17 @@ export class TodolistComponent implements AfterViewInit {
   loadLists(){
     this.todolistService.getLists()
     .subscribe(result=>{
-      this.TodoLists = result;
+      this.TodoLists = result.sort((x,y)=>{
+          if(x.created<y.created){
+            return 1;
+          }
+          if(x.created>y.created){
+            return -1;
+          }
+          if(x.created == y.created){
+            return 0;
+          }
+      });
 
       if(this.open){
         this.selectList(this.open);
@@ -84,9 +102,9 @@ export class TodolistComponent implements AfterViewInit {
   addList(title: string){
     this.todolistService.addList(title)
       .subscribe(result=> {
-        if(result){
-          this.loadLists();
-        }
+        this.TodoLists.unshift(result);
+        this.selectList(result.id);
+        $("#modal-details").modal("show");
       },errors=>{
         this.errors = errors;
       });
@@ -94,10 +112,14 @@ export class TodolistComponent implements AfterViewInit {
 
 
   selectList(id: string){
+    if(this.todoListDeleteRequestProcessing){
+      return;
+    }
       this.selectedList = this.TodoLists.find(x=>x.id ==id);
   }
 
   deleteListRequest(id: string){
+    this.todoListDeleteRequestProcessing = true;
     this.todoListDeleteRequest = this.TodoLists.find(x=>x.id == id);
   }
 
@@ -106,6 +128,7 @@ export class TodolistComponent implements AfterViewInit {
     .subscribe(result=> {
       if(result){
        this.deleteFromModel(id);
+       this.todoListDeleteRequestProcessing = false;
       }
     },errors=>{
       this.errors = errors;
@@ -115,6 +138,20 @@ export class TodolistComponent implements AfterViewInit {
   deleteFromModel(id:string){
       let index = this.TodoLists.findIndex(x=>x.id == id);
       this.TodoLists.splice(index,1);
+  }
+
+  openTodolist(id: string){
+    if(this.todoListDeleteRequestProcessing){
+      return;
+    }
+
+    this.selectList(id);
+    this.detailsComponent.setData();
+    this.openDetailsDialog();
+  }
+
+  openDetailsDialog(){
+    $('#modal-details').modal('show');
   }
 
 }

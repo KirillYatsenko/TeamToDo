@@ -9,9 +9,7 @@
   }
 
   .list-title {
-    cursor:pointer;
-    color:blue;
-    text-decoration:underline;
+    color:green !important;
   }
 
   .sign-in-up-btn{
@@ -37,4 +35,13 @@
   color: #c71a1a;
   position: absolute;
   right: 10px;
+}
+
+.green-border{
+  border-color: green !important;
+}
+
+.green-hover:hover{
+  background-color: green !important;
+  color: white !important;
 }

@@ -9,9 +9,10 @@
 .invitation-button:hover{
     margin-left: 3px; 
     width: 30px;
-     border: 2px solid #6c757d ; 
-     background-color: #dae0e5; 
+     border: 2px solid white ; 
+     background-color: green; 
      color: white;
+     cursor: pointer;
 }
 
 .dropdown-toggle::after {

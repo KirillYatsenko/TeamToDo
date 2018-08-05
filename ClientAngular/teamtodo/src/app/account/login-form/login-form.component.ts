@@ -20,6 +20,7 @@ export class LoginFormComponent implements OnInit {
    isRequesting: boolean;
    submitted: boolean = false;
    credentials: Credentials = {email: '', password: ''};
+   redirectingUrl:string;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private accountService: AccountService) { }
 
@@ -28,6 +29,7 @@ export class LoginFormComponent implements OnInit {
       (param: any)=>{
           this.brandNew = param['brandNew'];
           this.credentials.email = param['email'];
+          this.redirectingUrl = param['redirectingUrl'];
       }
     );
   }
@@ -39,7 +41,11 @@ export class LoginFormComponent implements OnInit {
       .subscribe(result=>
       {
         if(result){
-            this.router.navigate(['/todolists'])
+            if(this.redirectingUrl){
+              window.location.href =this.redirectingUrl;
+            }else{
+              this.router.navigate(['/todolists'])
+            }
         } 
       },
     

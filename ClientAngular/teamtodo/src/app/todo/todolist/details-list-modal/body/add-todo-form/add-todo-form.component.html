@@ -1,17 +1,17 @@
-<form #todoForm="ngForm">
+<form #todoForm="ngForm" class="green-border">
   <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <button [disabled]="!todoForm.valid" (click)="Modal.addTodo()" class="btn btn-outline-secondary" type="button">Add</button>
+        <button [disabled]="!todoForm.valid" (click)="Modal.addTodo()" class="btn btn-outline-secondary green-border green-hover" type="button">Add</button>
       </div>
-      <input type="text" class="form-control" placeholder="new todo"
+      <input type="text" class="form-control green-border" placeholder="new todo"
        aria-label="" aria-describedby="basic-addon1"
        required name="text" 
        [(ngModel)]="Modal.todo.text">
-      <div class="input-group-append">
-            <button (click)="changeImportant()" [ngClass]="{'selected-important':this.Modal.todo.important}" class="btn btn-outline-secondary" type="button">
+      <div class="input-group-append green-border">
+            <button  data-toggle="tooltip" data-placement="top" title="Important?" (click)="changeImportant()" [ngClass]="{'selected-important':this.Modal.todo.important}" class="btn btn-outline-secondary green-border green-hover" type="button">
                <i class="far fa-star"></i>
              </button>
-          <button id="member-dropdown" class="btn btn-default btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button id="member-dropdown" class="btn btn-default btn-outline-secondary dropdown-toggle green-border green-hover" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:green">
           </button>
           <div class="dropdown-menu">
               <span class="dropdown-item" (click)="Modal.selectCurrentUser()" >Me</span>
