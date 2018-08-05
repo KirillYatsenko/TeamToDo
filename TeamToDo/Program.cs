@@ -23,7 +23,7 @@ namespace TeamTodo
         {
           confing.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
         })
-       .UseUrls("http://localhost:5000/")
+       //.UseUrls("http://localhost:5000/")
        .Build();
 
       host.Run();

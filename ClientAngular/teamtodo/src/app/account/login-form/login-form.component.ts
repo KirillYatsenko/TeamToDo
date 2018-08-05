@@ -5,6 +5,7 @@ import {Credentials} from '../../shared/models/Credentials';
 import { AccountService } from '../../shared/services/account.service';
 import { finalize } from '../../../../node_modules/rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+declare var $: any;
 
 @Component({
   selector: 'app-login-form',
@@ -32,6 +33,14 @@ export class LoginFormComponent implements OnInit {
           this.redirectingUrl = param['redirectingUrl'];
       }
     );
+
+    let self = this;
+    $(document).keypress(function(e) {
+      if(e.which == 13) {
+          self.login();
+      }
+  });
+
   }
   
   login(){

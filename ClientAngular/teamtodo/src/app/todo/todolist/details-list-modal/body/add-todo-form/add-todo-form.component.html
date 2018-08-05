@@ -6,7 +6,8 @@
       <input type="text" class="form-control green-border" placeholder="new todo"
        aria-label="" aria-describedby="basic-addon1"
        required name="text" 
-       [(ngModel)]="Modal.todo.text">
+       [(ngModel)]="Modal.todo.text"
+       (keyup.enter)="Modal.addTodo()">
       <div class="input-group-append green-border">
             <button  data-toggle="tooltip" data-placement="top" title="Important?" (click)="changeImportant()" [ngClass]="{'selected-important':this.Modal.todo.important}" class="btn btn-outline-secondary green-border green-hover" type="button">
                <i class="far fa-star"></i>

@@ -101,6 +101,11 @@ export class DetailsListModalComponent implements OnInit {
    }
 
    addTodo(){
+
+      if(!this.todo.text || this.todo.text.length == 0){
+        return;
+      }
+
       if(this.selectedMember){
         this.todo.assigneeId = this.selectedMember.id;
       }
@@ -192,7 +197,7 @@ export class DetailsListModalComponent implements OnInit {
       .subscribe(
         result=>{
           if(result){
-           $("#modal-details").modal("hide");
+           $(`#${this.MODAL_ID}`).modal("hide");
             this.listComponent.deleteFromModel(id);
           }
         }

@@ -100,6 +100,11 @@ export class TodolistComponent implements AfterViewInit {
   }
 
   addList(title: string){
+
+    if(!title || title.length==0){
+      return;
+    }
+
     this.todolistService.addList(title)
       .subscribe(result=> {
         this.TodoLists.unshift(result);

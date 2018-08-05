@@ -47,10 +47,23 @@ namespace TeamTodo
       services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
       services.AddTransient<AccountManager>();
 
-      services.AddDbContext<TeamTodoContext>(
+      if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+      {
+        services.AddDbContext<TeamTodoContext>(
         options => options.UseLazyLoadingProxies().UseSqlServer(
-               Configuration["Data:TeamTodo:ConnectionString"]
+               Configuration["Data:TeamTodoAzure:ConnectionString"]
             ));
+      }
+      else
+      {
+        services.AddDbContext<TeamTodoContext>(
+         options => options.UseLazyLoadingProxies().UseSqlServer(
+              Configuration["Data:TeamTodoLocal:ConnectionString"]
+           ));
+      }
+       
+
+      services.BuildServiceProvider().GetService<TeamTodoContext>().Database.Migrate();
 
       services.AddIdentity<TeamTodoUser, IdentityRole>(options =>
       {
@@ -96,10 +109,21 @@ namespace TeamTodo
           .AllowAnyMethod()
           .AllowAnyHeader());
 
+      app.Use(async (context, next) => {
+        await next();
+        if (context.Response.StatusCode == 404 &&
+           !Path.HasExtension(context.Request.Path.Value) &&
+           !context.Request.Path.Value.StartsWith("/api/"))
+        {
+          context.Request.Path = "/index.html";
+          await next();
+        }
+      });
+
       app.UseAuthentication();
+      app.UseMvcWithDefaultRoute();
       app.UseDefaultFiles();
       app.UseStaticFiles();
-      app.UseMvc();
     }
 
     private void setRepositoriesTransient(IServiceCollection services)

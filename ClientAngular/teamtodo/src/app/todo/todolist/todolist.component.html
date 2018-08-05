@@ -12,7 +12,7 @@
       <div class="row"  style="margin: 3%">
           <div class="col-md-2"> </div>
           <div class="col-md-8">
-              <input style="text-align: center;" class="form-control" #title placeholder="Todo list" />
+              <input (keydown.enter)="addList(title.value)" style="text-align: center;" class="form-control" #title placeholder="Todo list" />
               <div style="text-align: center; margin-top: 10px;">
                   <button style="width: 30%;"  class="btn btn-success" (click)="addList(title.value); title.value=''">
                       Add 
