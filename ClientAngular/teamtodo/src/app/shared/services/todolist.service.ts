@@ -6,8 +6,8 @@ import {ConfigService} from './config.service';
 import {map, catchError} from 'rxjs/operators';
 import { Todo } from '../models/Todo';
 import { TodoList } from '../models/TodoList';
-import { Body } from '../../../../node_modules/@angular/http/src/body';
-import { UrlHandlingStrategy } from '../../../../node_modules/@angular/router';
+import { Body } from '@angular/http/src/body';
+import { UrlHandlingStrategy } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'

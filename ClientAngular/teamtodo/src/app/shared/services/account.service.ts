@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Http, Response, Headers, RequestOptions, ResponseOptions, ResponseType } from '@angular/http';
-import { Observable, of } from 'rxjs';
-import {UserRegistration} from '../models/userregistration';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import {ConfigService} from './config.service';
-import {map, catchError} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import { TodoUser } from '../models/TodoUser';
+import {bareHeaders, authorizationHeaders,responseTextAuthorizationOptions,responseTextOptions } from '../request-options-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -13,33 +12,33 @@ import { TodoUser } from '../models/TodoUser';
 export class AccountService {
 
   constructor(private http: HttpClient, private configService : ConfigService) {
-    this.baseUri = configService.getApiURI();
+    this.baseUrl = configService.getApiURI();
    }
 
-  private registrationUri = "/account/registration";
-  private loginUri = "/account/login";
-  private baseUri;
+   ngOnit(){ }
+
+  private baseUrl;
+  private registrationUrl = "/account/registration";
+  private loginUrl = "/account/login";
+  private validateUrl = "/account/ValidateToken";
+  private getUser = '/account/GetCurrentUser';
 
   register(email: string, username:string, password: string) : Observable<any> {
     let body = JSON.stringify({username,password,email});
-    let url = this.baseUri + this.registrationUri;
+    let url = this.baseUrl + this.registrationUrl;
+    let options = responseTextOptions();
 
-    return this.http.post(url,body,
-      {
-        responseType:"text",
-        headers:new HttpHeaders({ 'Content-Type': 'application/json' })
-      }
-    );
+    return this.http.post(url,body,responseTextOptions());
   }
 
   login(email:string, password: string) : Observable<any>{
     let body = JSON.stringify({email,password});
-    let url = this.baseUri + this.loginUri;
+    let url = this.baseUrl + this.loginUrl;
 
     return this.http.post(url,body,
      {
       responseType:"text",
-      headers:new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers:bareHeaders()
     }).pipe(
       map(result => {
         let token = JSON.parse(result).token;
@@ -54,47 +53,21 @@ export class AccountService {
   }
 
   async validateToken(){
-    let url = this.baseUri + '/account/ValidateToken';
+    let url = this.baseUrl + this.validateUrl;
 
-    return await this.http.get(url,{
-      responseType:"text",
-      headers:new HttpHeaders(
-       { 'Content-Type': 'application/json'
-        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-       }
-      )
-    }).toPromise().catch(x=>{
+    return await this.http.get(url,responseTextAuthorizationOptions()).toPromise().catch(x=>{
         return false;
     })
     
   }
 
-  getCurrentUser() :Observable<TodoUser>{
-    let url = this.baseUri + '/account/GetCurrentUser';
+  getCurrentUser() : Observable<TodoUser>{
+    let url = this.baseUrl + this.getUser;
     
     return this.http.get<TodoUser>(url,{
-      headers:new HttpHeaders(
-       { 'Content-Type': 'application/json'
-        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-       }
-      )
+      headers: authorizationHeaders()
     });
   }
 
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
  
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
- 
-      // TODO: better job of transforming error for user consumption
-    //  this.log(`${operation} failed: ${error.message}`);
- 
-      // Let the app keep running by returning an empty result.
-    return of(result as T);
-    };
-  }
-
-  ngOnit(){
-  }
 }

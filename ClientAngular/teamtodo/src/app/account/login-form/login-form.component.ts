@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {Credentials} from '../../shared/models/Credentials';
 import { AccountService } from '../../shared/services/account.service';
-import { finalize } from '../../../../node_modules/rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 declare var $: any;
 

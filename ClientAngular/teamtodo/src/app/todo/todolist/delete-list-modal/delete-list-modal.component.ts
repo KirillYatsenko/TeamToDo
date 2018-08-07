@@ -1,7 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { TodoList } from '../../../shared/models/TodoList';
 import { TodolistComponent } from '../todolist.component';
-import { $ } from '../../../../../node_modules/protractor';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'app-delete-list-modal',
