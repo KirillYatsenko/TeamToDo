@@ -16,15 +16,15 @@ declare var $: any;
 })
 export class DetailsListModalComponent implements OnInit {
 
-  constructor(private accountService : AccountService,
-              private todoListService: TodolistService,
-              private invitationService: InvitationService,
-              private todoService: TodoService,
-              private changeDetector: ChangeDetectorRef){}
+  constructor(private accountService: AccountService,
+    private todoListService: TodolistService,
+    private invitationService: InvitationService,
+    private todoService: TodoService,
+    private changeDetector: ChangeDetectorRef) { }
 
   @Input() listComponent: TodolistComponent;
   @Input() currentUser: TodoUser;
-  
+
   private MODAL_ID = "modal-details";
   private MEMBER_DROPDOWN_ID = "member-dropdown";
   private INVITATION_MODAL_ID = "modal-invitation-link";
@@ -38,175 +38,184 @@ export class DetailsListModalComponent implements OnInit {
   importantTodos: Todo[] = [];
   todos: Todo[] = [];
   doneTodos: Todo[];
-  todoDeletionRequet:boolean = false;
+  todoDeletionRequet: boolean = false;
   unreadDoneTodos: boolean = false;
 
   ngOnInit() {
 
   }
 
-  setData(){
-      this.todo = new Todo();
-      this.loadTodos();
-      this.loadDropdownMembers();
-      this.selectCurrentUser();
+  setData() {
+    this.todo = new Todo();
+    this.loadTodos();
+    this.loadDropdownMembers();
+    this.selectCurrentUser();
   }
 
-   loadTodos(){
-      this.todoService.getTodos(this.listComponent.selectedList.id)
-        .subscribe(result=>{
-          this.listComponent.selectedList.todos = result;
-          this.importantTodos = result.filter(x=>!x.completedBy && x.important);
-          this.todos = result.filter(x=>!x.completedBy && !x.important);
-          this.doneTodos = result.filter(x=>x.completedBy);
-        })
-   }
+  loadTodos() {
+    this.todoService.getTodos(this.listComponent.selectedList.id)
+      .subscribe(result => {
+        this.listComponent.selectedList.todos = result;
+        this.importantTodos = result.filter(x => !x.completedBy && x.important);
+        this.todos = result.filter(x => !x.completedBy && !x.important);
+        this.doneTodos = result.filter(x => x.completedBy);
+      })
+  }
 
-   loadDropdownMembers(){
+  loadDropdownMembers() {
     let cloned = this.listComponent.selectedList.members.map(x => Object.assign({}, x));
-    let clonedCurrentUser = this.listComponent.selectedList.members.findIndex(x=>x.id == this.currentUser.id);
-    cloned.splice(clonedCurrentUser,1);
+    let clonedCurrentUser = this.listComponent.selectedList.members.findIndex(x => x.id == this.currentUser.id);
+    cloned.splice(clonedCurrentUser, 1);
 
     this.dropdownMembers = cloned;
   }
 
-  selectAllMembers(){
+  selectAllMembers() {
     this.selectedMember = null;
     $(`#${this.MEMBER_DROPDOWN_ID}`).html("All");
   }
 
-  selectCurrentUser(){
+  selectCurrentUser() {
     this.selectedMember = this.currentUser;
     $(`#${this.MEMBER_DROPDOWN_ID}`).html("Me");
   }
 
-  selectMember(member: TodoUser){
+  selectMember(member: TodoUser) {
     this.selectedMember = member;
     $(`#${this.MEMBER_DROPDOWN_ID}`).html(this.selectedMember.userName);
   }
 
-  addMember(id: string){
+  addMember(id: string) {
     this.invitationService.generateInvitationLink(id)
       .subscribe(
         result => {
           this.invitationLink = result;
         },
-        errors=>{
+        errors => {
           this.errors = errors;
         }
       )
 
     $(`#${this.MODAL_ID}`).modal("hide");
     $(`#${this.INVITATION_MODAL_ID}`).modal("show");
-   }
+  }
 
-   addTodo(){
+  addTodo() {
 
-      if(!this.todo.text || this.todo.text.length == 0){
-        return;
-      }
+    if (!this.todo.text || this.todo.text.length == 0) {
+      return;
+    }
 
-      if(this.selectedMember){
-        this.todo.assigneeId = this.selectedMember.id;
-      }
-      this.todo.listId = this.listComponent.selectedList.id;
+    if (this.selectedMember) {
+      this.todo.assigneeId = this.selectedMember.id;
+    }
+    this.todo.listId = this.listComponent.selectedList.id;
 
-      this.todoService.addTodo(this.todo)
-        .subscribe(
-          result=>{
-            if(result.important){
-              this.importantTodos.push(result);
-            }else{
-              this.todos.push(result);
-            }
-            
-            this.todo=new Todo();
-           this.listComponent.selectedList.todosCount+=1;
-          }
-        );
-   }
+    this.todoService.addTodo(this.todo)
+      .subscribe(
+        result => {
+          this.addTodoToModel(result);
+        }
+      );
+  }
 
-   deleteTodo(todo: Todo){
+  deleteTodo(todo: Todo) {
     this.todoDeletionRequet = true;
 
     this.todoService.deleteTodo(todo.id)
       .subscribe(
-        result=>{
-          
-          if(result){
+        result => {
 
-            let todos = this.todos;
-
-            if(todo.important){
-              todos = this.importantTodos;
-            }
-
-            todos.splice(
-              todos.findIndex(x=>x.id == todo.id),1
-            )
+          if (result) {
+            this.deleteTodoFromModel(todo);
           }
 
           this.todoDeletionRequet = false;
-          this.listComponent.selectedList.todosCount-=1;
-
+          this.listComponent.selectedList.todosCount -= 1;
         }
       );
-   }
+  }
 
-   finishTodo(id: string){
+  finishTodo(id: string) {
 
-    if(this.todoDeletionRequet){
+    if (this.todoDeletionRequet) {
       return;
     }
 
-    if(this.doneTodos.find(x=>x.id == id)){
+    if (this.doneTodos.find(x => x.id == id)) {
       return;
     }
 
-     this.todoService.completeTodo(id)
-       .subscribe(result=>{
+    this.todoService.completeTodo(id)
+      .subscribe(result => {
 
-         if(result){
+        if (result) {
+          this.updateTodoFinished(id);
+        }
 
-          let todos : Todo[];
-          todos = this.todos;
+      })
+  }
 
-           let index = todos.findIndex(x=>x.id == id)
-           if(index == -1){
-            todos = this.importantTodos;
-            index = todos.findIndex(x=>x.id == id)
-           }
-
-           todos[index].completedBy = this.currentUser;
-
-           this.doneTodos.push(
-            todos[index]
-           )
-
-           todos.splice(index,1);
-
-           this.unreadDoneTodos = true;
-           this.listComponent.selectedList.todosCount-=1;
-         }
-
-       })
-   }
-
-  leaveGroup(id: string){
+  leaveGroup(id: string) {
     this.todoListService.leaveGroup(id)
       .subscribe(
-        result=>{
-          if(result){
-           $(`#${this.MODAL_ID}`).modal("hide");
+        result => {
+          if (result) {
+            $(`#${this.MODAL_ID}`).modal("hide");
             this.listComponent.removeListFromModel(id);
           }
         }
       )
   }
 
-  
+  private deleteTodoFromModel(todo: Todo) {
+    let todos = this.todos;
 
-  
+    if (todo.important) {
+      todos = this.importantTodos;
+    }
+
+    todos.splice(
+      todos.findIndex(x => x.id == todo.id), 1
+    )
+  }
+
+  private addTodoToModel(todo: Todo) {
+    if (todo.important) {
+      this.importantTodos.push(todo);
+    } else {
+      this.todos.push(todo);
+    }
+
+    this.todo = new Todo();
+    this.listComponent.selectedList.todosCount += 1;
+  }
+
+  private updateTodoFinished(id: string) {
+    let todos: Todo[];
+    todos = this.todos;
+
+    let index = todos.findIndex(x => x.id == id)
+    if (index == -1) {
+      todos = this.importantTodos;
+      index = todos.findIndex(x => x.id == id)
+    }
+
+    todos[index].completedBy = this.currentUser;
+
+    this.doneTodos.push(
+      todos[index]
+    )
+
+    todos.splice(index, 1);
+
+    this.unreadDoneTodos = true;
+    this.listComponent.selectedList.todosCount -= 1;
+  }
+
+
+
+
 
 
 }
