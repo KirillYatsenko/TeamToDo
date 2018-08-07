@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {bareHeaders, authorizationHeaders,responseTextAuthorizationOptions,responseTextOptions } from '../request-options-helper';
+import {authorizationHeaders } from '../request-options-helper';
 
 
 @Injectable({
@@ -24,10 +24,7 @@ export class InvitationService {
   generateInvitationLink(id: string) : Observable<string>{
     let url = this.baseUrl + this.generateInvitationHashUrl
 
-    return this.http.post<string>(url, `"${id}"`,
-      {
-        headers: authorizationHeaders()
-      }
+    return this.http.post<string>(url, `"${id}"`, {headers: authorizationHeaders()}
     ).pipe(
       map(result=>{
         return this.baseInviteUrl + `?id=${result}`;
@@ -37,6 +34,7 @@ export class InvitationService {
 
   acceptInvitation(id: string) : Observable<string>{
     let url = this.baseUrl+this.acceptInvitationUrl;
+    
     return this.http.post(url,`"${id}"`,  {
       responseType:"text",
       headers: authorizationHeaders()
