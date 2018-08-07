@@ -2,93 +2,69 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Http, Response, Headers, RequestOptions, ResponseOptions, ResponseType } from '@angular/http';
 import { Observable, of } from 'rxjs';
-import {ConfigService} from './config.service';
-import {map, catchError} from 'rxjs/operators';
+import { ConfigService } from './config.service';
+import { map, catchError } from 'rxjs/operators';
 import { Todo } from '../models/Todo';
 import { TodoList } from '../models/TodoList';
 import { Body } from '@angular/http/src/body';
 import { UrlHandlingStrategy } from '@angular/router';
+import { bareHeaders, authorizationHeaders, responseTextAuthorizationOptions, responseTextOptions } from '../request-options-helper';
+
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class TodolistService {
 
-  baseUri:string;
-
-  options = {
-    headers:new HttpHeaders(
-     { 'Content-Type': 'application/json'
-      , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-     }
-    )
-  }
-
   constructor(private http: HttpClient, private configService: ConfigService) {
-    this.baseUri = configService.getApiURI();
-   }
-
-  getLists() : Observable<TodoList[]>{
-    let url = this.baseUri+'/todolist';
-
-    return this.http.get<TodoList[]>(url,this.options);
+    this.baseUrl = configService.getApiURI();
   }
 
-  getList(id: string) : Observable<TodoList>{
-    let url = this.baseUri+`/todolist/${id}`;
+  private baseUrl;
 
-    return this.http.get<TodoList>(url,this.options);
+  getLists(): Observable<TodoList[]> {
+    let url = this.baseUrl + '/todolist';
+
+    return this.http.get<TodoList[]>(url, { headers: authorizationHeaders() });
   }
 
-  addList(title: string) : Observable<TodoList>{
-     let url = this.baseUri+'/todolist';
+  getList(id: string): Observable<TodoList> {
+    let url = this.baseUrl + `/todolist/${id}`;
 
-    return this.http.post<TodoList>(url,`"${title}"`,{
-      headers:new HttpHeaders(
-       { 'Content-Type': 'application/json'
-        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-       }
-      )
-    } );
+    return this.http.get<TodoList>(url, { headers: authorizationHeaders() });
   }
 
-  deleteList(id: string) : Observable<boolean>{
-    let url = this.baseUri+`/todolist/${id}`;
+  addList(title: string): Observable<TodoList> {
+    let url = this.baseUrl + '/todolist';
+
+    return this.http.post<TodoList>(url, `"${title}"`, { headers: authorizationHeaders() });
+  }
+
+  deleteList(id: string): Observable<boolean> {
+    let url = this.baseUrl + `/todolist/${id}`;
 
     return this.http.delete(url,
       {
-      responseType:"text",
-      headers:new HttpHeaders(
-       { 'Content-Type': 'application/json'
-        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-       }
-      )
-    }).pipe(
-      map(result=>{
-        return true;
-      })
-    )
-  }
-
-  leaveGroup(id: string): Observable<boolean>{
-    let url = this.baseUri + `/todolist/leavegroup/${id}`;
-    
-    return this.http.delete(url,
-      {
-      responseType:"text",
-      headers:new HttpHeaders(
-       { 'Content-Type': 'application/json'
-        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-       }
-      )
-    }).pipe(
-      map(x=>
-        {
+        responseType: "text",
+        headers: authorizationHeaders()
+      }).pipe(
+        map(result => {
           return true;
-        }
-      )
-    )
+        })
+      );
+  }
 
+  leaveGroup(id: string): Observable<boolean> {
+    let url = this.baseUrl + `/todolist/leavegroup/${id}`;
+
+    return this.http.delete(url, responseTextAuthorizationOptions()
+    ).pipe(
+      map(x => {
+        return true;
+      }
+      )
+    );
   }
 
 

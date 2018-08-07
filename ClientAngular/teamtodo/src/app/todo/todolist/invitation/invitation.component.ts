@@ -16,24 +16,24 @@ export class InvitationComponent implements OnInit {
   errors: string;
 
   constructor(private activatedRoute: ActivatedRoute,
-  private invitationService: InvitationService,
-  private router : Router) { }
+    private invitationService: InvitationService,
+    private router: Router) { }
 
   ngOnInit() {
     this.subscription = this.activatedRoute.queryParams.subscribe(
-      (param: any)=>{
-          this.id = param['id'];
+      (param: any) => {
+        this.id = param['id'];
       }
     );
 
-   this.invitationService.acceptInvitation(this.id)
-    .subscribe(result=>{
-      if(result){
-        this.router.navigate(['/todolists'],{queryParams: {open: result}});                         
-      }
-    },errors=>{
-      this.errors = errors["error"];
-    });
+    this.invitationService.acceptInvitation(this.id)
+      .subscribe(result => {
+        if (result) {
+          this.router.navigate(['/todolists'], { queryParams: { open: result } });
+        }
+      }, errors => {
+        this.errors = errors["error"];
+      });
   }
 
 }

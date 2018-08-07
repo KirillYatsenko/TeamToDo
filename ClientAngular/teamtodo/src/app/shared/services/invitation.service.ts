@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {authorizationHeaders } from '../request-options-helper';
+import { authorizationHeaders } from '../request-options-helper';
 
 
 @Injectable({
@@ -11,8 +11,8 @@ import {authorizationHeaders } from '../request-options-helper';
 })
 export class InvitationService {
 
-  constructor(private http: HttpClient, private configService: ConfigService) { 
-    this.baseInviteUrl = window.location.origin +'/invitation';
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.baseInviteUrl = window.location.origin + '/invitation';
     this.baseUrl = configService.getApiURI();
   }
 
@@ -21,22 +21,22 @@ export class InvitationService {
   private generateInvitationHashUrl = '/Invitation/GenerateInvitationHash';
   private acceptInvitationUrl = '/Invitation/AcceptInvitation';
 
-  generateInvitationLink(id: string) : Observable<string>{
+  generateInvitationLink(id: string): Observable<string> {
     let url = this.baseUrl + this.generateInvitationHashUrl
 
-    return this.http.post<string>(url, `"${id}"`, {headers: authorizationHeaders()}
+    return this.http.post<string>(url, `"${id}"`, { headers: authorizationHeaders() }
     ).pipe(
-      map(result=>{
+      map(result => {
         return this.baseInviteUrl + `?id=${result}`;
       })
     )
   }
 
-  acceptInvitation(id: string) : Observable<string>{
-    let url = this.baseUrl+this.acceptInvitationUrl;
-    
-    return this.http.post(url,`"${id}"`,  {
-      responseType:"text",
+  acceptInvitation(id: string): Observable<string> {
+    let url = this.baseUrl + this.acceptInvitationUrl;
+
+    return this.http.post(url, `"${id}"`, {
+      responseType: "text",
       headers: authorizationHeaders()
     });
   }

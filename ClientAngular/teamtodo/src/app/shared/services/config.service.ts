@@ -6,13 +6,13 @@ import { environment } from '../../../environments/environment';
 })
 export class ConfigService {
 
-  private _apiURI  : string;
+  private _apiURI: string;
 
-  constructor() { 
+  constructor() {
     this._apiURI = environment.apiUrl;
   }
 
-  getApiURI(){
+  getApiURI() {
     return this._apiURI;
   }
 }
