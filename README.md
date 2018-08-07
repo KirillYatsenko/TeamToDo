@@ -2,7 +2,11 @@
 Simple todo app with the ability to share tasks between team members
 
 Built up with web api + angular 6
-# Functionality
+# Functionality 
+
+You can watch the creation of the project in real time - [Trello board](https://trello.com/b/AkZhm7to/teamtodo)
+
+Already done
 - [x] Sign up
 - [x] Sign in
 - [x] Add todolist
