@@ -2,58 +2,26 @@
 
   <app-navbar [UserName]="currentUser?.userName"></app-navbar>
 
-  <!-- Button to Open the Modal -->
-<!-- <h1>User: {{currentUser?.email}}</h1> -->
-
   <div class="row">
+
     <div class="col-md-2"></div>
     <div class="col-md-8">
 
-      <div class="row"  style="margin: 3%">
-          <div class="col-md-2"> </div>
-          <div class="col-md-8">
-              <input (keydown.enter)="addList(title.value)" style="text-align: center;" class="form-control" #title placeholder="Todo list" />
-              <div style="text-align: center; margin-top: 10px;">
-                  <button style="width: 30%;"  class="btn btn-success" (click)="addList(title.value); title.value=''">
-                      Add 
-                    </button> 
-              </div>
-          </div>
-      </div>
-      
-        
-        <div *ngIf="TodoLists.length; else notodolists">
-          <div class="lists" *ngFor="let todolist of TodoLists" style="margin-top:2%;">
-              <div class="card todolist" (click)="openTodolist(todolist.id) ">
-                  <h5 class="card-header">
-                     <span class="list-title">
-                      <strong> {{todolist.title}}</strong> </span>
-                     <span *ngIf="todolist.creator.id == currentUser.id"
-                     (click)="deleteListRequest(todolist.id)"  data-toggle="modal" data-target="#confirmationDialog" class="delete-btn align-middle"><i class="fas fa-trash"></i></span>
-                  </h5>
-                  <div class="card-body" style="text-align: center;">
-                     <div *ngIf="todolist.todosCount>0; else notodos">
-                        <h5>You have {{todolist.todosCount}} uncompleted todos.</h5>
-                     </div>
-                     <ng-template #notodos>
-                            <h5>Click there to add new todos!</h5>
-                      </ng-template>
-                  </div>
-                  <!-- <button *ngIf="todolist.creator.id == currentUser.id" class="btn btn-danger" (click)="deleteListRequest(todolist.id)"
-                  data-toggle="modal" data-target="#confirmationDialog">Delete</button> -->
-                </div>
-          </div>
+      <app-addlist-form [listComponent]="this"></app-addlist-form>
+
+      <app-todolists [listComponent]="this" [Todolists]="TodoLists"></app-todolists>
+
+      <ng-template #notodolists>
+        <div style="text-align: center; margin-top: 30%">
+          <h4>You don't have any Todo lists. Start by adding them. </h4>
         </div>
-        <ng-template #notodolists>
-          <div style="text-align: center; margin-top: 30%">
-              <h4>You don't have any Todo lists. Start by adding them. </h4>
-          </div>
-        </ng-template> 
+      </ng-template>
+
+    </div>
   </div>
-  </div>
-</div> 
+
+</div>
 
 
 <app-details-list-modal [currentUser]="currentUser" [listComponent]="this"></app-details-list-modal>
-<app-delete-list-modal [todoList]="todoListDeleteRequest" [deleteComponent]="this"></app-delete-list-modal>
-
+<app-delete-list-modal [todoList]="todoListDeleteRequest" [listComponent]="this"></app-delete-list-modal>

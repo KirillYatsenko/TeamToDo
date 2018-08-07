@@ -1,0 +1,25 @@
+<div *ngIf="Todolists?.length>0; else notodolists">
+
+  <div class="lists" *ngFor="let todolist of Todolists" style="margin-top:2%;">
+    <div class="card todolist" (click)="openTodolist(todolist.id)">
+      <h5 class="card-header">
+        <span class="list-title">
+          <strong> {{todolist.title}}</strong>
+        </span>
+        <span *ngIf="todolist.creator.id == this.listComponent.currentUser.id" (click)="deleteListRequest(todolist.id)" data-toggle="modal" data-target="#confirmation-dialog"
+          class="delete-btn align-middle">
+          <i class="fas fa-trash"></i>
+        </span>
+      </h5>
+      <div class="card-body" style="text-align: center;">
+        <div *ngIf="todolist.todosCount>0; else notodos">
+          <h5>You have {{todolist.todosCount}} uncompleted todos.</h5>
+        </div>
+        <ng-template #notodos>
+          <h5>Click there to add new todos!</h5>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+</div>

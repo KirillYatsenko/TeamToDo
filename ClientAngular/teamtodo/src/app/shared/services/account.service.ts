@@ -48,6 +48,10 @@ export class AccountService {
       )
   }
 
+  logout(){
+    localStorage.removeItem('auth_token');
+  }
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('auth_token');
   }

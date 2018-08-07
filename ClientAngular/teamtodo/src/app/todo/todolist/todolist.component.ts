@@ -8,145 +8,92 @@ import { TodoUser } from '../../shared/models/TodoUser';
 import { DetailsListModalComponent } from './details-list-modal/details-list-modal.component';
 declare var $: any;
 
-
 @Component({
   selector: 'app-todolist',
   templateUrl: './todolist.component.html',
   styleUrls: ['./todolist.component.css']
 })
+
 export class TodolistComponent implements AfterViewInit {
+
+  constructor(private todolistService: TodolistService,
+    private activatedRoute: ActivatedRoute,
+    private accountService: AccountService) { }
 
   private subscription: Subscription;
 
   @ViewChild(DetailsListModalComponent)
   private detailsComponent: DetailsListModalComponent;
 
-  TodoLists: TodoList[] = [];
+  private openQueryParam: string;
+
+  CONFIRMATION_DIALOG_ID = "confirmation-dialog";
+  DETAILS_DIALOG_ID = "modal-details";
+
+  TodoLists: TodoList[];
   currentUser: TodoUser;
   selectedList: TodoList;
 
   errors: string;
-  open: string;
   todoListDeleteRequest: TodoList = new TodoList();
   todoListDeleteRequestProcessing: boolean = false;
 
-  constructor( private todolistService: TodolistService,  
-    private activatedRoute: ActivatedRoute,
-    private accountService: AccountService){}
 
   ngOnInit() {
 
-    let self = this;
-    $('#confirmationDialog').on('hide.bs.modal', function (e) {
-      self.todoListDeleteRequestProcessing = false;
-    })
-
-    $('body').tooltip({
-      selector: '[data-toggle=tooltip]'
-     });
+    this.defineJqueryEvents();
 
     this.subscription = this.activatedRoute.queryParams.subscribe(
-      (param: any)=>{
-          this.open = param['open'];
+      (param: any) => {
+        this.openQueryParam = param['open'];
       }
     );
 
     this.loadLists();
-
     this.loadCurrentUser();
   }
 
   ngAfterViewInit() {
-    console.log('gogogo');
   }
 
-  loadCurrentUser(){
+  loadCurrentUser() {
     this.accountService.getCurrentUser()
       .subscribe(
-        result=>{
+        result => {
           this.currentUser = result;
         },
-        errors =>{
+        errors => {
           this.errors = errors;
         }
       )
   }
 
-  loadLists(){
+  loadLists() {
     this.todolistService.getLists()
-    .subscribe(result=>{
-      this.TodoLists = result.sort((x,y)=>{
-          if(x.created<y.created){
-            return 1;
-          }
-          if(x.created>y.created){
-            return -1;
-          }
-          if(x.created == y.created){
-            return 0;
-          }
-      });
+      .subscribe(result => {
+        this.TodoLists = result.sort((a, b) => this.listSort(a, b));
 
-      if(this.open){
-        this.selectList(this.open);
-        this.detailsComponent.setData();
-        $("#modal-details").modal("show");
-      }
+        if (this.openQueryParam) {
+          this.selectList(this.openQueryParam);
+          this.detailsComponent.setData();
+          $(`#${this.DETAILS_DIALOG_ID}`).modal("show");
+        }
 
-    },
-    errors=>{
-      this.errors = errors;
-    });
+      },
+        errors => {
+          this.errors = errors;
+        });
   }
 
-  addList(title: string){
-
-    if(!title || title.length==0){
+  selectList(id: string) {
+    if (this.todoListDeleteRequestProcessing) {
       return;
     }
-
-    this.todolistService.addList(title)
-      .subscribe(result=> {
-        this.TodoLists.unshift(result);
-        this.selectList(result.id);
-        $("#modal-details").modal("show");
-      },errors=>{
-        this.errors = errors;
-      });
+    this.selectedList = this.TodoLists.find(x => x.id == id);
   }
 
-
-  selectList(id: string){
-    if(this.todoListDeleteRequestProcessing){
-      return;
-    }
-      this.selectedList = this.TodoLists.find(x=>x.id ==id);
-  }
-
-  deleteListRequest(id: string){
-    this.todoListDeleteRequestProcessing = true;
-    this.todoListDeleteRequest = this.TodoLists.find(x=>x.id == id);
-  }
-
-  confirmDeletion(id: string){
-    this.todolistService.deleteList(id)
-    .subscribe(result=> {
-      if(result){
-       this.deleteFromModel(id);
-       this.todoListDeleteRequestProcessing = false;
-      }
-    },errors=>{
-      this.errors = errors;
-    });
-  }
-
-  deleteFromModel(id:string){
-      let index = this.TodoLists.findIndex(x=>x.id == id);
-      this.TodoLists.splice(index,1);
-  }
-
-  openTodolist(id: string){
-    if(this.todoListDeleteRequestProcessing){
+  openTodolist(id: string) {
+    if (this.todoListDeleteRequestProcessing) {
       return;
     }
 
@@ -155,8 +102,42 @@ export class TodolistComponent implements AfterViewInit {
     this.openDetailsDialog();
   }
 
-  openDetailsDialog(){
-    $('#modal-details').modal('show');
+  deleteListRequest(id: string) {
+    this.todoListDeleteRequestProcessing = true;
+    this.todoListDeleteRequest = this.TodoLists.find(x => x.id == id);
+  }
+
+  removeListFromModel(id: string) {
+    let index = this.TodoLists.findIndex(x => x.id == id);
+    this.TodoLists.splice(index, 1);
+  }
+
+  private listSort(x: TodoList, y: TodoList): number {
+    if (x.created < y.created) {
+      return 1;
+    }
+    if (x.created > y.created) {
+      return -1;
+    }
+    if (x.created == y.created) {
+      return 0;
+    }
+  }
+
+  private defineJqueryEvents() {
+    let self = this;
+
+    $(`#${this.CONFIRMATION_DIALOG_ID}`).on('hide.bs.modal', function (e) {
+      self.todoListDeleteRequestProcessing = false;
+    })
+
+    $('body').tooltip({
+      selector: '[data-toggle=tooltip]'
+    });
+  }
+
+  private openDetailsDialog() {
+    $(`#${this.DETAILS_DIALOG_ID}`).modal('show');
   }
 
 }

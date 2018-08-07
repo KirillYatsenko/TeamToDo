@@ -198,7 +198,7 @@ export class DetailsListModalComponent implements OnInit {
         result=>{
           if(result){
            $(`#${this.MODAL_ID}`).modal("hide");
-            this.listComponent.deleteFromModel(id);
+            this.listComponent.removeListFromModel(id);
           }
         }
       )

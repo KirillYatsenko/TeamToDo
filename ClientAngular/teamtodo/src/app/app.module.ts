@@ -18,6 +18,8 @@ import { TodosComponent } from './todo/todolist/details-list-modal/body/todos/to
 import { TabsComponent } from './todo/todolist/details-list-modal/body/tabs/tabs.component';
 import { InvitationModalComponent } from './todo/todolist/details-list-modal/invitation-modal/invitation-modal.component';
 import { NavbarComponent } from './todo/todolist/navbar/navbar.component';
+import { AddlistFormComponent } from './todo/todolist/addlist-form/addlist-form.component';
+import { TodolistsComponent } from './todo/todolist/todolists/todolists.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { NavbarComponent } from './todo/todolist/navbar/navbar.component';
     TodosComponent,
     TabsComponent,
     InvitationModalComponent,
-    NavbarComponent
+    NavbarComponent,
+    AddlistFormComponent,
+    TodolistsComponent
   ],
   imports: [
     BrowserModule,
