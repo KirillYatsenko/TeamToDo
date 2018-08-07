@@ -21,7 +21,7 @@ export class AccountService {
   private registrationUrl = "/account/registration";
   private loginUrl = "/account/login";
   private validateUrl = "/account/ValidateToken";
-  private getUser = '/account/GetCurrentUser';
+  private getUserUrl = '/account/GetCurrentUser';
 
   register(email: string, username:string, password: string) : Observable<any> {
     let body = JSON.stringify({username,password,email});
@@ -62,7 +62,7 @@ export class AccountService {
   }
 
   getCurrentUser() : Observable<TodoUser>{
-    let url = this.baseUrl + this.getUser;
+    let url = this.baseUrl + this.getUserUrl;
     
     return this.http.get<TodoUser>(url,{
       headers: authorizationHeaders()

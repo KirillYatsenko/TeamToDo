@@ -3,45 +3,43 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {bareHeaders, authorizationHeaders,responseTextAuthorizationOptions,responseTextOptions } from '../request-options-helper';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvitationService {
 
-  constructor(private http: HttpClient, private configServcie: ConfigService) { 
-    this.baseInviteLink = window.location.origin +'/invitation';
+  constructor(private http: HttpClient, private configService: ConfigService) { 
+    this.baseInviteUrl = window.location.origin +'/invitation';
+    this.baseUrl = configService.getApiURI();
   }
 
-  baseInviteLink: string;
+  private baseUrl;
+  private baseInviteUrl;
+  private generateInvitationHashUrl = '/Invitation/GenerateInvitationHash';
+  private acceptInvitationUrl = '/Invitation/AcceptInvitation';
 
   generateInvitationLink(id: string) : Observable<string>{
-    let url = this.configServcie.getApiURI() + '/Invitation/GenerateInvitationHash'
-    let authToken = localStorage.getItem('auth_token');
+    let url = this.baseUrl + this.generateInvitationHashUrl
 
     return this.http.post<string>(url, `"${id}"`,
       {
-        headers:new HttpHeaders(
-          { 'Content-Type': 'application/json'
-          , 'Authorization': `Bearer ${authToken}` }
-        )
+        headers: authorizationHeaders()
       }
     ).pipe(
       map(result=>{
-        return this.baseInviteLink + `?id=${result}`;
+        return this.baseInviteUrl + `?id=${result}`;
       })
     )
   }
 
   acceptInvitation(id: string) : Observable<string>{
-    let url = this.configServcie.getApiURI()+'/Invitation/AcceptInvitation';
+    let url = this.baseUrl+this.acceptInvitationUrl;
     return this.http.post(url,`"${id}"`,  {
       responseType:"text",
-      headers:new HttpHeaders(
-       { 'Content-Type': 'application/json'
-        , 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-       }
-      )
+      headers: authorizationHeaders()
     });
   }
 
