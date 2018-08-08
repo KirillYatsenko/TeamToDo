@@ -3,7 +3,7 @@
       <div class="input-group-prepend">
         <button [disabled]="!todoForm.valid" (click)="Modal.addTodo()" class="btn btn-outline-secondary green-border green-hover" type="button">Add</button>
       </div>
-      <input type="text" class="form-control green-border" placeholder="new todo"
+      <input id="todo-title" type="text" class="form-control green-border" placeholder="new todo"
        aria-label="" aria-describedby="basic-addon1"
        required name="text" 
        [(ngModel)]="Modal.todo.text"

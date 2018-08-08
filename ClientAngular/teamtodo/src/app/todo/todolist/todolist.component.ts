@@ -41,8 +41,6 @@ export class TodolistComponent implements AfterViewInit {
 
   ngOnInit() {
 
-    this.defineJqueryEvents();
-
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (param: any) => {
         this.openQueryParam = param['open'];
@@ -54,6 +52,7 @@ export class TodolistComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.defineJqueryEvents();;
   }
 
   loadCurrentUser() {
@@ -125,7 +124,12 @@ export class TodolistComponent implements AfterViewInit {
   }
 
   private defineJqueryEvents() {
+
     let self = this;
+
+    $(`#${this.DETAILS_DIALOG_ID}`).on('shown.bs.modal', function (e) {
+      $('#todo-title').focus();
+    })
 
     $(`#${this.CONFIRMATION_DIALOG_ID}`).on('hide.bs.modal', function (e) {
       self.todoListDeleteRequestProcessing = false;
@@ -134,6 +138,8 @@ export class TodolistComponent implements AfterViewInit {
     $('body').tooltip({
       selector: '[data-toggle=tooltip]'
     });
+
+    $('#todolist-title').focus();
   }
 
   private openDetailsDialog() {
